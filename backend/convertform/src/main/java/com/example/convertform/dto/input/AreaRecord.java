@@ -10,5 +10,5 @@ public class AreaRecord {
     @XlsColumn(columnName = "Location")
     String location;
     @XlsColumn(columnName = "Radius")
-    String radius;
+    double radius;
 }

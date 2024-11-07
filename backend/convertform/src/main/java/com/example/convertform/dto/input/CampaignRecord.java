@@ -2,6 +2,8 @@ package com.example.convertform.dto.input;
 
 import com.gh.mygreen.xlsmapper.annotation.XlsColumn;
 
+import java.util.Date;
+
 public class CampaignRecord {
     @XlsColumn(columnName = "Account ID")
     String accountId;
@@ -10,13 +12,13 @@ public class CampaignRecord {
     @XlsColumn(columnName = "Campaign Name")
     String cName;
     @XlsColumn(columnName = "Budget")
-    String budget;
+    double budget;
     @XlsColumn(columnName = "Publication Period")
-    String startDate;
+    Date startDate;
     @XlsColumn(columnName = "Publication Period", headerMerged = 1)
     String startTime;
     @XlsColumn(columnName = "Publication Period", headerMerged = 2)
-    String endDate;
+    Date endDate;
     @XlsColumn(columnName = "Publication Period", headerMerged = 3)
     String endTime;
     @XlsColumn(columnName = "Campaign Objectives")
