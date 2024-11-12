@@ -56,6 +56,17 @@
 			<version>3.0.3</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.33</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.mygreen</groupId>
+			<artifactId>xlsmapper</artifactId>
+			<version>2.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>
