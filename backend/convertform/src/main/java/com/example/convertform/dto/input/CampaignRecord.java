@@ -1,6 +1,9 @@
 package com.example.convertform.dto.input;
 
+import com.example.convertform.enum_class.campaign.CampaignArea;
+import com.example.convertform.enum_class.campaign.CampaignStatus;
 import com.gh.mygreen.xlsmapper.annotation.XlsColumn;
+import com.gh.mygreen.xlsmapper.annotation.XlsEnumConverter;
 import lombok.Data;
 
 import java.util.Date;
@@ -10,7 +13,8 @@ public class CampaignRecord {
     @XlsColumn(columnName = "Account ID")
     String accountId;
     @XlsColumn(columnName = "Status")
-    String status;
+    @XlsEnumConverter(aliasMethod = "value")
+    CampaignStatus status;
     @XlsColumn(columnName = "Campaign Name")
     String cName;
     @XlsColumn(columnName = "Budget")
@@ -26,5 +30,5 @@ public class CampaignRecord {
     @XlsColumn(columnName = "Campaign Objectives")
     String objective;
     @XlsColumn(columnName = "Area")
-    String area;
+    CampaignArea campaignArea;
 }

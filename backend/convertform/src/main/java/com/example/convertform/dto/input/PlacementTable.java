@@ -12,7 +12,7 @@ import java.util.List;
 //Mỗi record là 1 table trong sheet
 @Data
 public class PlacementTable {
-    @XlsHorizontalRecords(tableLabel = "Placement Targeting", bottom = 4, terminal = RecordTerminal.Border)
+    @XlsHorizontalRecords(tableLabel = "Placement Targeting", bottom = 4)
     List<PlacementRecord> placementRecords;
     @XlsLabelledCell(label = "Targeting Name", type = LabelledCellType.Right)
     String targetName;
