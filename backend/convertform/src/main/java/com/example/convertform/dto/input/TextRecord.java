@@ -1,7 +1,9 @@
 package com.example.convertform.dto.input;
 
 import com.gh.mygreen.xlsmapper.annotation.XlsColumn;
+import lombok.Data;
 
+@Data
 public class TextRecord {
     @XlsColumn(columnName = "Status")
     String status;

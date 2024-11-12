@@ -4,7 +4,7 @@ import com.gh.mygreen.xlsmapper.annotation.XlsColumn;
 import lombok.Data;
 
 @Data
-public class SearchKeywordItem {
-    @XlsColumn(columnName = "Keyword")
-    String keyword;
+public class PlacementRecord {
+    @XlsColumn(columnName = "Domain")
+    String domain;
 }

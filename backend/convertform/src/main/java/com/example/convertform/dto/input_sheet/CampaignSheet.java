@@ -5,9 +5,11 @@ import com.gh.mygreen.xlsmapper.annotation.LabelledCellType;
 import com.gh.mygreen.xlsmapper.annotation.XlsHorizontalRecords;
 import com.gh.mygreen.xlsmapper.annotation.XlsLabelledCell;
 import com.gh.mygreen.xlsmapper.annotation.XlsSheet;
+import lombok.Data;
 
 import java.util.List;
 
+@Data
 @XlsSheet(name = "Campaign Entry Field")
 public class CampaignSheet {
     @XlsLabelledCell(label = "", type = LabelledCellType.Right)

@@ -3,10 +3,12 @@ package com.example.convertform.dto.input_sheet;
 import com.example.convertform.dto.input.SiteCategoryRecord;
 import com.gh.mygreen.xlsmapper.annotation.XlsHorizontalRecords;
 import com.gh.mygreen.xlsmapper.annotation.XlsSheet;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 @XlsSheet(name = "Site Category")
 public class SiteCategorySheet {
     @XlsHorizontalRecords(headerColumn = 0, headerRow = 2)

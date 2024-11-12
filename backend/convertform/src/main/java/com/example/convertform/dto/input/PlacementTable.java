@@ -1,6 +1,6 @@
 package com.example.convertform.dto.input;
 
-import com.example.convertform.dto.input.target_list_item.PlacementItem;
+import com.example.convertform.dto.input.target_list_item.PlacementRecord;
 import com.gh.mygreen.xlsmapper.annotation.LabelledCellType;
 import com.gh.mygreen.xlsmapper.annotation.RecordTerminal;
 import com.gh.mygreen.xlsmapper.annotation.XlsHorizontalRecords;
@@ -11,9 +11,9 @@ import java.util.List;
 
 //Mỗi record là 1 table trong sheet
 @Data
-public class PlacementRecord {
+public class PlacementTable {
     @XlsHorizontalRecords(tableLabel = "Placement Targeting", bottom = 4, terminal = RecordTerminal.Border)
-    List<PlacementItem> placementItems;
+    List<PlacementRecord> placementRecords;
     @XlsLabelledCell(label = "Targeting Name", type = LabelledCellType.Right)
     String targetName;
     @XlsLabelledCell(label = "List Name", type = LabelledCellType.Right)

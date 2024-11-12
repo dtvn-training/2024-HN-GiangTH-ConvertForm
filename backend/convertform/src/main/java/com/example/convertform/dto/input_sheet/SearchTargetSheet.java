@@ -1,24 +1,26 @@
 package com.example.convertform.dto.input_sheet;
 
-import com.example.convertform.dto.input.SearchTargetRecord;
-import com.example.convertform.dto.input.target_list_item.SearchKeywordItem;
+import com.example.convertform.dto.input.SearchTargetTable;
+import com.example.convertform.dto.input.target_list_item.SearchKeywordRecord;
 import com.gh.mygreen.xlsmapper.annotation.XlsIterateTables;
 import com.gh.mygreen.xlsmapper.annotation.XlsSheet;
+import lombok.Data;
 
 import java.util.List;
 
+@Data
 @XlsSheet(name = "Search Targeting")
 public class SearchTargetSheet {
     @XlsIterateTables(tableLabel = "Search Targeting", bottom = 3)
-    List<SearchTargetRecord> searchTargetRecords;
+    List<SearchTargetTable> searchTargetTables;
 
     public String show() {
         StringBuilder stringBuilder = new StringBuilder();
-        for (SearchTargetRecord searchTargetRecord: searchTargetRecords) {
-            stringBuilder.append(searchTargetRecord.getTargetName()).append(" ").append(searchTargetRecord.getListName()).append(" ").append("\n");
-            if (searchTargetRecord.getSearchKeywordItems() != null) {
-                for (SearchKeywordItem searchKeywordItem : searchTargetRecord.getSearchKeywordItems()) {
-                    stringBuilder.append(" ").append(searchKeywordItem.getKeyword()).append(" ");
+        for (SearchTargetTable searchTargetTable : searchTargetTables) {
+            stringBuilder.append(searchTargetTable.getTargetName()).append(" ").append(searchTargetTable.getListName()).append(" ").append("\n");
+            if (searchTargetTable.getSearchKeywordRecords() != null) {
+                for (SearchKeywordRecord searchKeywordRecord : searchTargetTable.getSearchKeywordRecords()) {
+                    stringBuilder.append(" ").append(searchKeywordRecord.getKeyword()).append(" ");
                 }
             }
             stringBuilder.append("\n");

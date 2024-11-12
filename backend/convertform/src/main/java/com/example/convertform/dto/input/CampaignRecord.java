@@ -1,9 +1,11 @@
 package com.example.convertform.dto.input;
 
 import com.gh.mygreen.xlsmapper.annotation.XlsColumn;
+import lombok.Data;
 
 import java.util.Date;
 
+@Data
 public class CampaignRecord {
     @XlsColumn(columnName = "Account ID")
     String accountId;
