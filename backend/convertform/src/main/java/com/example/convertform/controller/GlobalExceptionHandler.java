@@ -1,0 +1,48 @@
+package com.example.convertform.controller;
+
+import com.gh.mygreen.xlsmapper.cellconverter.TypeBindException;
+import com.gh.mygreen.xlsmapper.textformatter.TextParseException;
+import jakarta.validation.ValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+    Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @ExceptionHandler(TypeBindException.class)
+    public ResponseEntity<String> handleTypeBind(Exception e) {
+        logger.trace(e.toString());
+        return ResponseEntity.status(500).body("Data type error");
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<String> handleIO(ValidationException e) {
+        logger.trace(e.toString());
+        return ResponseEntity.status(500).body(e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleMethod(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((err) -> {
+            String fieldName = ((FieldError) err).getField();
+            String errMessage = err.getDefaultMessage();
+            errors.put(fieldName, errMessage);
+        });
+
+        return errors;
+    }
+}
