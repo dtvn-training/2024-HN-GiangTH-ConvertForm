@@ -1,19 +1,20 @@
 package com.example.convertform.service.impl;
 
+import com.example.convertform.dto.input.AdGroupRecord;
+import com.example.convertform.dto.input.AreaRecord;
 import com.example.convertform.dto.input.CampaignRecord;
 import com.example.convertform.dto.input_sheet.*;
 import com.example.convertform.service.IFileReadService;
-import com.example.convertform.validation.ValidationUtils;
+import com.example.convertform.validation.ListValidator;
 import com.gh.mygreen.xlsmapper.XlsMapper;
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -33,18 +34,25 @@ public class FileReadService implements IFileReadService {
             System.out.println(sheet.toString());
         }
 
-        CampaignSheet cSheet = (CampaignSheet) sheets[0];
-        StringBuilder validateResult = new StringBuilder();
-        for (CampaignRecord campaignRecord : cSheet.getCampaignRecords()) {
-            String ans = fileValidateService.validateData(campaignRecord);
-            validateResult.append(ans);
-        }
+        //Validate single field
+        String validateResult = fileValidateService.validateSingleFieldData(sheets);
+        List<CampaignRecord> cp = ((CampaignSheet) sheets[0]).getCampaignRecords();
+        List<AdGroupRecord> adGp = ((AdGroupSheet) sheets[1]).getAdGroupRecordList();
+        List<AreaRecord> ar = ((AreaSheet) sheets[2]).getAreaRecords();
 
-        if (!Objects.equals(validateResult.toString(), "no problem")) throw new ValidationException(validateResult.toString());
+        //If no error in field, check related validate
+        ListValidator.validateTwoLists(cp, ar, ListValidator::checkCpNameInArea, "Double check ");
+        ListValidator.validateTwoLists(adGp, cp, ListValidator::checkCpNameInAdGroup, "Triple check ");
+        ListValidator.validateDuplicateCampaignList(cp, "Campaign have duplicate value");
+        ListValidator.validateDuplicateAdGroupList(adGp, "Ad Group List have duplicate value");
+        if (!Objects.equals(validateResult, "no problem")) throw new ValidationException(validateResult);
 
-//        fileValidateService.validateData(cSheet);
+//        List<CampaignRecord> cp = ((CampaignSheet) sheets[0]).getCampaignRecords();
+//        List<AreaRecord> ar = ((AreaSheet) sheets[2]).getAreaRecords();
+//
+//        //If no error in field, check related validate
+//        ListValidator.validateLists(cp, ar, ListValidator::checkCpNameInArea, "Loop loop poop poop");
 
-        System.out.println(((CampaignSheet) sheets[0]).show());
         return "dfasf";
     }
 
@@ -53,15 +61,4 @@ public class FileReadService implements IFileReadService {
         return new Object[0];
     }
 
-//    private void validateCampaignSheet(CampaignSheet campaignSheet) throws ValidationException {
-//        Set<ConstraintViolation<CampaignSheet>> violations = ValidationUtils.validate(campaignSheet);
-//
-//        if (!violations.isEmpty()) {
-//            StringBuilder sb = new StringBuilder("Validation errors:\n");
-//            for (ConstraintViolation<CampaignSheet> violation : violations) {
-//                sb.append("- ").append(violation.getPropertyPath()).append(": ").append(violation.getMessage()).append("\n");
-//            }
-//            throw new ValidationException(sb.toString());
-//        }
-//    }
 }

@@ -11,12 +11,17 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @StartDateBeforeEndDate
-public class CampaignRecord {
+public class CampaignRecord extends BaseRecord {
+    @XlsColumn(columnName = "No")
+    int no;
+
     @XlsColumn(columnName = "Account ID")
     @NotNull(message = "Account ID is required")
     String accountId;
@@ -57,4 +62,9 @@ public class CampaignRecord {
 
     @XlsColumn(columnName = "Area")
     CampaignArea campaignArea;
+
+    @Override
+    public int getNo() {
+        return this.no;
+    }
 }

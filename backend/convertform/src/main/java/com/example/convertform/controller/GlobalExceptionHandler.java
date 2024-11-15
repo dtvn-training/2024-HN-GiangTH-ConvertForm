@@ -22,9 +22,14 @@ public class GlobalExceptionHandler {
     Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(TypeBindException.class)
-    public ResponseEntity<String> handleTypeBind(Exception e) {
+    public ResponseEntity<String> handleTypeBind(TypeBindException e) {
         logger.trace(e.toString());
-        return ResponseEntity.status(500).body("Data type error");
+        String msg = e.getMessage();
+        int indexClass1 = msg.lastIndexOf('.');
+        int indexClass2 = msg.indexOf('#');
+        int index1 = e.getMessage().indexOf('(');
+        int index2 = e.getMessage().indexOf(')');
+        return ResponseEntity.status(500).body(msg.substring(35, indexClass2) + " - " + msg.substring(index1 + 1, index2));
     }
 
     @ExceptionHandler(ValidationException.class)
