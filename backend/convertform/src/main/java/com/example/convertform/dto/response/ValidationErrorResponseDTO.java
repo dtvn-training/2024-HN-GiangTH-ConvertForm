@@ -11,6 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 public class ValidationErrorResponseDTO {
     private String sheetName;
-    private List<ValidationErrorRecordDTO> errorRecordDTOList;
-    private List<ValidationErrorSheetDTO> errorSheetDTOList;
+    private List<ErrorFromRecordDTO> errorRecordDTOList;
+    private List<ErrorFromSheetDTO> errorSheetDTOList;
 }

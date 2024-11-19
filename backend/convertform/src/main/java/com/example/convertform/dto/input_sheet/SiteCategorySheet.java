@@ -6,7 +6,9 @@ import com.gh.mygreen.xlsmapper.annotation.XlsSheet;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @XlsSheet(name = "Site Category")
@@ -35,15 +37,15 @@ public class SiteCategorySheet {
      * If found tick "O" in SiteCategory, add correspond Category in CategoryList of this Site
      * @return void
      */
-    public String showCountCategory() {
-        List<String> site1 = new ArrayList<>();
-        List<String> site2 = new ArrayList<>();
-        List<String> site3 = new ArrayList<>();
+    public Map<String, List<String>> getTargetCategory() {
+        Map<String, List<String>> targetSite = new HashMap<>();
+
         for (SiteCategoryRecord siteCategoryRecord : siteCategoryRecords) {
-            if (siteCategoryRecord.getTick() != null) site1.add(siteCategoryRecord.getCategory());
-            if (siteCategoryRecord.getTick2() != null) site2.add(siteCategoryRecord.getCategory());
-            if (siteCategoryRecord.getTick3() != null) site3.add(siteCategoryRecord.getCategory());
+            if (siteCategoryRecord.getTick() != null) targetSite.computeIfAbsent("Site Category①", k -> new ArrayList<>()).add(siteCategoryRecord.getCategory());
+            if (siteCategoryRecord.getTick() != null) targetSite.computeIfAbsent("Site Category②", k -> new ArrayList<>()).add(siteCategoryRecord.getCategory());
+            if (siteCategoryRecord.getTick() != null) targetSite.computeIfAbsent("Site Category③", k -> new ArrayList<>()).add(siteCategoryRecord.getCategory());
         }
-        return site1.toString() + "\n" + site2.toString() + "\n" + site3.toString();
+
+        return targetSite;
     }
 }

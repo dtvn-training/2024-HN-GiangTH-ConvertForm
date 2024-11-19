@@ -9,9 +9,11 @@ import com.gh.mygreen.xlsmapper.annotation.XlsEnumConverter;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -45,7 +47,8 @@ public class CampaignRecord extends BaseRecord {
 
     @XlsColumn(columnName = "Publication Period", headerMerged = 1)
     @NotNull(message = "Time is required")
-    @ValidTimeFormat
+    @Pattern(regexp = "^([01]?[0-9]|2[0-3]):[0-5][0-9]$",
+            message = "Time must be in format HH:mm")
     String startTime;
 
     @XlsColumn(columnName = "Publication Period", headerMerged = 2)
@@ -53,7 +56,8 @@ public class CampaignRecord extends BaseRecord {
     Date endDate;
 
     @XlsColumn(columnName = "Publication Period", headerMerged = 3)
-    @ValidTimeFormat
+    @Pattern(regexp = "^([01]?[0-9]|2[0-3]):[0-5][0-9]$",
+            message = "Time must be in format HH:mm")
     String endTime;
 
     @XlsColumn(columnName = "Campaign Objectives")

@@ -1,11 +1,9 @@
 package com.example.convertform.validation;
 
 import com.example.convertform.dto.input.BaseRecord;
-import com.example.convertform.dto.input.CampaignRecord;
-import com.example.convertform.dto.input_sheet.CampaignSheet;
 import com.example.convertform.dto.response.ValidationErrorResponseDTO;
-import com.example.convertform.dto.response.ValidationErrorRecordDTO;
-import com.example.convertform.dto.response.ValidationErrorSheetDTO;
+import com.example.convertform.dto.response.ErrorFromRecordDTO;
+import com.example.convertform.dto.response.ErrorFromSheetDTO;
 import jakarta.validation.*;
 
 import java.util.ArrayList;
@@ -28,9 +26,9 @@ public class ValidationUtils {
      * @return List of DTO objects represent for validation errors (use for response purpose)
      */
     public static ValidationErrorResponseDTO buildResponseDTO(Object o, Set<ConstraintViolation<Object>> violations) {
-        List<ValidationErrorRecordDTO> errorRecordDTOList = new ArrayList<>();
-        List<ValidationErrorSheetDTO> errorSheetDTOList = new ArrayList<>();
-        int errorNo = 300;
+        List<ErrorFromRecordDTO> errorRecordDTOList = new ArrayList<>();
+        List<ErrorFromSheetDTO> errorSheetDTOList = new ArrayList<>();
+        int errorNo = -1;
 
         String sheetName = o.getClass().getSimpleName();
 
@@ -45,24 +43,21 @@ public class ValidationUtils {
             if (errorObject instanceof BaseRecord) {
                 errorNo = ((BaseRecord) errorObject).getNo();
             } else {
-                // If error come from other field, not from record in Sheet
+                // Other error come from other source, not from record-level
                 // Add to ErrorSheet
-                errorSheetDTOList.add(new ValidationErrorSheetDTO(message, propertyPath));
+                errorSheetDTOList.add(new ErrorFromSheetDTO(message, propertyPath));
                 // Skip get the fieldName
                 continue;
             }
 
+            // path have form : object[index].fieldName
             // Skip path until "]." , the rest string is field name
             // If "]" char is the end of path, that's mean its Class-level error, not field error
-            if ((propertyPath.length() - 1) == endIndex) {
-                errorRecordDTOList.add(new ValidationErrorRecordDTO(0, "Class-level error", message));
-            }
-            else {
+            if ((propertyPath.length() - 1) != endIndex) {
                 String fieldName = propertyPath.substring(endIndex + 2);
-                errorRecordDTOList.add(new ValidationErrorRecordDTO(errorNo, fieldName, message));
+                errorRecordDTOList.add(new ErrorFromRecordDTO(errorNo, fieldName, message));
             }
         }
-
         return new ValidationErrorResponseDTO(sheetName, errorRecordDTOList, errorSheetDTOList);
     }
 }

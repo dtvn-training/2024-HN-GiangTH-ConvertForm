@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ValidationErrorSheetDTO {
+public class ErrorFromSheetDTO {
     String message;
     String cellName;
 }

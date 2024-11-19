@@ -1,10 +1,9 @@
 package com.example.convertform.service.impl;
 
-import com.example.convertform.dto.input.AdGroupRecord;
-import com.example.convertform.dto.input.AreaRecord;
-import com.example.convertform.dto.input.CampaignRecord;
+import com.example.convertform.dto.input.*;
 import com.example.convertform.dto.input_sheet.*;
 import com.example.convertform.service.IFileReadService;
+import com.example.convertform.validation.AdGroupTargetValidator;
 import com.example.convertform.validation.ListValidator;
 import com.gh.mygreen.xlsmapper.XlsMapper;
 import jakarta.validation.ValidationException;
@@ -36,15 +35,26 @@ public class FileReadService implements IFileReadService {
 
         //Validate single field
         String validateResult = fileValidateService.validateSingleFieldData(sheets);
+
         List<CampaignRecord> cp = ((CampaignSheet) sheets[0]).getCampaignRecords();
         List<AdGroupRecord> adGp = ((AdGroupSheet) sheets[1]).getAdGroupRecordList();
         List<AreaRecord> ar = ((AreaSheet) sheets[2]).getAreaRecords();
+        List<SearchTargetTable> searchTables = ((SearchTargetSheet) sheets[5]).getSearchTargetTables();
+        List<PlacementTable> placementTables = ((PlacementSheet) sheets[4]).getPlacementTables();
+        SiteCategorySheet siteCategorySheet = (SiteCategorySheet) sheets[6];
 
         //If no error in field, check related validate
         ListValidator.validateTwoLists(cp, ar, ListValidator::checkCpNameInArea, "Double check ");
         ListValidator.validateTwoLists(adGp, cp, ListValidator::checkCpNameInAdGroup, "Triple check ");
         ListValidator.validateDuplicateCampaignList(cp, "Campaign have duplicate value");
         ListValidator.validateDuplicateAdGroupList(adGp, "Ad Group List have duplicate value");
+
+        for (AdGroupRecord adGroupRecord : adGp) {
+            System.out.println(AdGroupTargetValidator.validateAdGroupTargets(adGroupRecord, placementTables, searchTables, siteCategorySheet));
+        }
+
+        System.out.println(AdGroupTargetValidator.validateUnusedTarget(adGp, placementTables, searchTables, siteCategorySheet));
+
         if (!Objects.equals(validateResult, "no problem")) throw new ValidationException(validateResult);
 
 //        List<CampaignRecord> cp = ((CampaignSheet) sheets[0]).getCampaignRecords();

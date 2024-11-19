@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ValidationErrorRecordDTO {
+public class ErrorFromRecordDTO {
     private int recordNo;
     private String fieldName;
     private String message;
