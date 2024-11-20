@@ -1,6 +1,7 @@
 package com.example.convertform.dto.input_sheet;
 
 import com.example.convertform.dto.input.CampaignRecord;
+import com.example.convertform.validation.annotation.SelectionRequired;
 import com.gh.mygreen.xlsmapper.annotation.LabelledCellType;
 import com.gh.mygreen.xlsmapper.annotation.XlsHorizontalRecords;
 import com.gh.mygreen.xlsmapper.annotation.XlsLabelledCell;
@@ -19,22 +20,11 @@ public class CampaignSheet {
 
     @XlsLabelledCell(label = "Account Design ", type = LabelledCellType.Right)
     @NotNull(message = "label cannot be blank")
-    @Min(value = 20, message = "Campaign label too short")
+    @SelectionRequired(values = {"Yes", "No"})
     String labelCell;
 
     @XlsHorizontalRecords(headerRow = 3, headerColumn = 0, headerBottom = 2)
     @Valid
     @NotNull(message = "campaign cannot be null")
     List<CampaignRecord> campaignRecords;
-
-    public String show() {
-        StringBuilder ans = new StringBuilder();
-        for (CampaignRecord campaignRecord : campaignRecords) {
-            ans.append(campaignRecord.getCampaignArea());
-            ans.append(" ");
-            ans.append(campaignRecord.getStatus().value());
-            ans.append("\n");
-        }
-        return ans.toString();
-    }
 }

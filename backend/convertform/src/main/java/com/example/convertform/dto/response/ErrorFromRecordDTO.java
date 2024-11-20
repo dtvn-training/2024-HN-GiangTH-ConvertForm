@@ -11,4 +11,10 @@ public class ErrorFromRecordDTO {
     private int recordNo;
     private String fieldName;
     private String message;
+
+    public ErrorFromRecordDTO(int recordNo, String message) {
+        this.recordNo = recordNo;
+        this.fieldName = "Not specified";
+        this.message = message;
+    }
 }

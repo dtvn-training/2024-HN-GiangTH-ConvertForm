@@ -1,12 +1,7 @@
 package com.example.convertform.dto.input;
 
-import com.example.convertform.enum_class.adgp.AdgpAge;
-import com.example.convertform.enum_class.adgp.AdgpDevice;
-import com.example.convertform.enum_class.adgp.AdgpGender;
-import com.example.convertform.enum_class.adgp.AdgpStatus;
 import com.example.convertform.validation.annotation.SelectionRequired;
 import com.gh.mygreen.xlsmapper.annotation.XlsColumn;
-import com.gh.mygreen.xlsmapper.annotation.XlsEnumConverter;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,9 +13,9 @@ public class AdGroupRecord extends BaseRecord {
     int no;
 
     @XlsColumn(columnName = "Status")
-    @XlsEnumConverter(aliasMethod = "value")
-    @NotNull(message = "Adgp status is required")
-    AdgpStatus status;
+    @NotNull(message = "AdGp status is required")
+    @SelectionRequired(values = {"New Request", "Pre-Request", "Published", "Pending", "Suspended"})
+    String status;
 
     @XlsColumn(columnName = "Campaign Name")
     @NotNull(message = "Campaign Name is required")
@@ -96,15 +91,16 @@ public class AdGroupRecord extends BaseRecord {
     String number10;
 
     @XlsColumn(columnName = "Device")
-    @XlsEnumConverter(aliasMethod = "value")
-    AdgpDevice device;
+    @SelectionRequired(values = {"ALL", "PC/TB", "SP/TB", "PC/SP", "PC", "TB", "SP"})
+    String device;
 
     @XlsColumn(columnName = "Gender")
-    AdgpGender gender;
+    @SelectionRequired(values = {"ALL", "Male", "Female"})
+    String gender;
 
     @XlsColumn(columnName = "Age")
-    @XlsEnumConverter(aliasMethod = "value")
-    AdgpAge age;
+    @SelectionRequired(values = {"ALL", "18+", "25+", "30+", "40+", "50+", "60+", "70+"})
+    String age;
 
     @Override
     public int getNo() {

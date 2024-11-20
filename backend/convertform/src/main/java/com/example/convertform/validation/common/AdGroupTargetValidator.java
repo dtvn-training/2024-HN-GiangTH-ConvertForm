@@ -1,27 +1,29 @@
-package com.example.convertform.validation;
+package com.example.convertform.validation.common;
 
 import com.example.convertform.dto.input.AdGroupRecord;
 import com.example.convertform.dto.input.PlacementTable;
 import com.example.convertform.dto.input.SearchTargetTable;
 import com.example.convertform.dto.input.target_list_item.TargetPair;
 import com.example.convertform.dto.input_sheet.SiteCategorySheet;
+import com.example.convertform.dto.response.ErrorFromRecordDTO;
+import com.example.convertform.dto.response.ErrorFromTargetTableDTO;
+import com.example.convertform.dto.response.ValidationErrorResponseDTO;
 
 import java.util.*;
 
 public class AdGroupTargetValidator {
 
-    public static String validateAdGroupTargets(AdGroupRecord adGroupRecord,
-                                              List<PlacementTable> placementTables,
-                                              List<SearchTargetTable> searchTargetTables,
-                                              SiteCategorySheet siteCategorySheet) {
+    public static List<ErrorFromRecordDTO> validateAdGroupTargets(AdGroupRecord adGroupRecord,
+                                                                  List<PlacementTable> placementTables,
+                                                                  List<SearchTargetTable> searchTargetTables,
+                                                                  SiteCategorySheet siteCategorySheet) {
 
         List<TargetPair> pairs = getTargetPairList(adGroupRecord);
         Map<String, List<String>> siteCategories = siteCategorySheet.getTargetCategory();
-        StringBuilder stringBuilder = new StringBuilder("AdGroup Target Validate: \n");
+        List<ErrorFromRecordDTO> errorFromRecordDTOS = new ArrayList<>();
 
         for (TargetPair pair : pairs) {
             if (pair.getTargetName() == null || pair.getNumber() == null) continue;
-            System.out.println(pair.getPairName());
 
             String type = getType(pair.getTargetName());
             boolean exist = switch (type) {
@@ -33,19 +35,18 @@ public class AdGroupTargetValidator {
                 default -> false;
             };
 
-            if (!exist) stringBuilder.append("Ad Group No ").append(adGroupRecord.getNo()).append(" contains an invalid target : ")
-                    .append(pair.getTargetName()).append(pair.getNumber()).append("\n");
+            if (!exist) errorFromRecordDTOS.add(new ErrorFromRecordDTO(adGroupRecord.getNo(), pair.getPairName(), "Invalid target: target not exist"));
         }
 
-        return stringBuilder.toString();
+        return errorFromRecordDTOS;
     }
 
-    public static String validateUnusedTarget(List<AdGroupRecord> adGroupRecords,
-                                       List<PlacementTable> placementTables,
-                                       List<SearchTargetTable> searchTargetTables,
-                                       SiteCategorySheet siteCategorySheet) {
+    public static void validateUnusedTarget(List<AdGroupRecord> adGroupRecords,
+                                                                List<PlacementTable> placementTables,
+                                                                List<SearchTargetTable> searchTargetTables,
+                                                                SiteCategorySheet siteCategorySheet,
+                                                                List<ValidationErrorResponseDTO> validationErrorResponseDTOS) {
 
-        StringBuilder stringBuilder = new StringBuilder("Unused (not exist in AdGroup) targets: \n");
         Set<String> usedInAdGroupTarget = new HashSet<>();
 
         for (AdGroupRecord adGroupRecord : adGroupRecords) {
@@ -57,34 +58,39 @@ public class AdGroupTargetValidator {
             usedInAdGroupTarget.addAll(adGroupTarget);
         }
 
-        checkUnusedPlacementTarget(placementTables, usedInAdGroupTarget, stringBuilder);
-        checkUnusedSearchTarget(searchTargetTables, usedInAdGroupTarget, stringBuilder);
-
-        return stringBuilder.toString();
+        validationErrorResponseDTOS.get(4).getErrorSheetDTOList().addAll(checkUnusedPlacementTarget(placementTables, usedInAdGroupTarget));
+        validationErrorResponseDTOS.get(5).getErrorSheetDTOList().addAll(checkUnusedSearchTarget(searchTargetTables, usedInAdGroupTarget));
+        validationErrorResponseDTOS.get(6).getErrorSheetDTOList().addAll(checkUnusedSiteCategory(siteCategorySheet, usedInAdGroupTarget));
     }
 
-    public static void checkUnusedPlacementTarget(List<PlacementTable> placementTables,
-                                             Set<String> used,
-                                             StringBuilder stringBuilder) {
+    public static List<ErrorFromTargetTableDTO> checkUnusedPlacementTarget(List<PlacementTable> placementTables,
+                                             Set<String> used) {
+        List<ErrorFromTargetTableDTO> error = new ArrayList<>();
         for (PlacementTable placementTable : placementTables) {
-            if (!used.contains(placementTable.getTargetName())) stringBuilder.append(placementTable.getTargetName()).append("\n");
+            if (!used.contains(placementTable.getTargetName()) && placementTable.getTargetName() != null)
+                error.add(new ErrorFromTargetTableDTO("Unused in Ad Group", placementTable.getTargetName()));
         }
+        return error;
     }
 
-    public static void checkUnusedSearchTarget(List<SearchTargetTable> searchTargetTables,
-                                                  Set<String> used,
-                                                  StringBuilder stringBuilder) {
+    public static List<ErrorFromTargetTableDTO> checkUnusedSearchTarget(List<SearchTargetTable> searchTargetTables,
+                                                  Set<String> used) {
+        List<ErrorFromTargetTableDTO> error = new ArrayList<>();
         for (SearchTargetTable searchTable : searchTargetTables) {
-            if (!used.contains(searchTable.getTargetName())) stringBuilder.append(searchTable.getTargetName()).append("\n");
+            if (!used.contains(searchTable.getTargetName()) && searchTable.getTargetName() != null)
+                error.add(new ErrorFromTargetTableDTO("Unused in Ad Group", searchTable.getTargetName()));
         }
+        return error;
     }
 
-    public static void checkUnusedSiteCategory(SiteCategorySheet siteCategorySheet,
-                                               Set<String> used,
-                                               StringBuilder stringBuilder) {
+    public static List<ErrorFromTargetTableDTO> checkUnusedSiteCategory(SiteCategorySheet siteCategorySheet,
+                                               Set<String> used) {
+        List<ErrorFromTargetTableDTO> error = new ArrayList<>();
         for (String key : siteCategorySheet.getTargetCategory().keySet()) {
-            if (!used.contains(key)) stringBuilder.append(key).append("\n");
+            if (!used.contains(key) && !siteCategorySheet.getTargetCategory().get(key).isEmpty())
+                error.add(new ErrorFromTargetTableDTO("Unused in Ad Group", key));
         }
+        return error;
     }
 
     public static List<TargetPair> getTargetPairList(AdGroupRecord adGroupRecord) {

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErrorFromSheetDTO {
+public class ErrorFromTargetTableDTO {
     String message;
-    String cellName;
+    String targetName;
 }

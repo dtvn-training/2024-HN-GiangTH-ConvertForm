@@ -12,5 +12,5 @@ import java.util.List;
 public class ValidationErrorResponseDTO {
     private String sheetName;
     private List<ErrorFromRecordDTO> errorRecordDTOList;
-    private List<ErrorFromSheetDTO> errorSheetDTOList;
+    private List<ErrorFromTargetTableDTO> errorSheetDTOList;
 }

@@ -15,19 +15,4 @@ public class PlacementSheet {
     @XlsIterateTables(tableLabel = "Placement Targeting", bottom = 4)
     @Valid
     List<PlacementTable> placementTables;
-
-    public String show() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (PlacementTable placementTable : placementTables) {
-            stringBuilder.append(placementTable.getTargetName()).append(" ").append(placementTable.getListName()).append(" ").append(placementTable.getInclude()).append("\n");
-            if (placementTable.getPlacementRecords() != null) {
-                for (PlacementRecord placementItem : placementTable.getPlacementRecords()) {
-                    stringBuilder.append(" ").append(placementItem.getDomain()).append(" ");
-                }
-            }
-            stringBuilder.append("\n");
-        }
-
-        return stringBuilder.toString();
-    }
 }
