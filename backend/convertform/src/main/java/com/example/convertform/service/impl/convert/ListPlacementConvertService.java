@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ListPlacementConvertService {
@@ -31,9 +30,14 @@ public class ListPlacementConvertService {
         return list;
     }
 
-    public List<List<PlacementListOutput>> listConvert(PlacementSheet sheet) {
-        return sheet.getPlacementTables().stream()
+    public List<PlacementListOutput> listConvert(PlacementSheet sheet) {
+        List<List<PlacementListOutput>> temp = sheet.getPlacementTables().stream()
                 .map(this::itemConvert)
-                .collect(Collectors.toList());
+                .toList();
+
+        List<PlacementListOutput> res = new ArrayList<>();
+        temp.forEach(res::addAll);
+
+        return res;
     }
 }

@@ -6,7 +6,7 @@ import lombok.Data;
 public class SiteCategoryOutput {
     String cName;
     String adGpName;
-    String age;
+    String category;
     String componentType;
     String targetingType;
 }

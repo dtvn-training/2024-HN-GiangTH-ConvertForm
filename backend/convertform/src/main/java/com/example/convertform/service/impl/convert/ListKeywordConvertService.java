@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ListKeywordConvertService {
@@ -31,9 +30,14 @@ public class ListKeywordConvertService {
         return list;
     }
 
-    public List<List<KeywordListOutput>> listConvert(SearchTargetSheet sheet) {
-        return sheet.getSearchTargetTables().stream()
+    public List<KeywordListOutput> listConvert(SearchTargetSheet sheet) {
+        List<List<KeywordListOutput>> temp = sheet.getSearchTargetTables().stream()
                 .map(this::itemConvert)
-                .collect(Collectors.toList());
+                .toList();
+
+        List<KeywordListOutput> res = new ArrayList<>();
+        temp.forEach(res::addAll);
+
+        return res;
     }
 }

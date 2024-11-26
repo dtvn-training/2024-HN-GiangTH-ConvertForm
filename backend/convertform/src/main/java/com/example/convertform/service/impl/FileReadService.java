@@ -1,15 +1,10 @@
 package com.example.convertform.service.impl;
 
-import com.example.convertform.dto.input.AdGroupRecord;
 import com.example.convertform.dto.input_sheet.*;
-import com.example.convertform.dto.output.AdGroupOutput;
-import com.example.convertform.dto.output.AdOutput;
-import com.example.convertform.dto.output.CampaignOutput;
+import com.example.convertform.dto.output.*;
 import com.example.convertform.dto.response.ValidationErrorResponseDTO;
 import com.example.convertform.service.IFileReadService;
-import com.example.convertform.service.impl.convert.AdConvertService;
-import com.example.convertform.service.impl.convert.AdGroupConvertService;
-import com.example.convertform.service.impl.convert.CampaignConvertService;
+import com.example.convertform.service.impl.convert.*;
 import com.gh.mygreen.xlsmapper.XlsMapper;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +23,9 @@ public class FileReadService implements IFileReadService {
     private final CampaignConvertService campaignConvertService;
     private final AdGroupConvertService adGroupConvertService;
     private final AdConvertService adConvertService;
+    private final SearchTargetConvertService searchTargetConvertService;
+    private final PlacementConvertService placementConvertService;
+    private final SiteCategoryConvertService siteCategoryConvertService;
     @Override
     public String readInputFileDemo() throws IOException {
         FileInputStream fileInputStream = new FileInputStream("C:\\Users\\GiangTH\\Downloads\\input_true.xlsx");
@@ -51,9 +49,12 @@ public class FileReadService implements IFileReadService {
         List<CampaignOutput> campaignOutputs = campaignConvertService.listConvert((CampaignSheet) sheets[0]);
         List<AdGroupOutput> adGroupOutputs = adGroupConvertService.listConvert(((AdGroupSheet) sheets[1]), (CampaignSheet) sheets[0]);
         List<AdOutput> adOutputs = adConvertService.listConvert(((TextSheet) sheets[3]), (CampaignSheet) sheets[0]);
+        List<SearchTargetOutput> searchTargetOutputs = searchTargetConvertService.listConvert((SearchTargetSheet) sheets[5], (AdGroupSheet) sheets[1], (CampaignSheet) sheets[0]);
+        List<PlacementOutput> placementOutputs = placementConvertService.listConvert((PlacementSheet) sheets[4], (AdGroupSheet) sheets[1], (CampaignSheet) sheets[0]);
+        List<SiteCategoryOutput> siteCategoryOutputs = siteCategoryConvertService.listConvert((SiteCategorySheet) sheets[6], (AdGroupSheet) sheets[1], (CampaignSheet) sheets[0]);
 
-        if (!validateSingleFieldDataResult.isEmpty()) fileWriteService.writeErrorFile(validateSingleFieldDataResult);
-        throw new ValidationException(adOutputs.toString());
+//        if (!validateSingleFieldDataResult.isEmpty()) fileWriteService.writeErrorFile(validateSingleFieldDataResult);
+        throw new ValidationException(siteCategoryOutputs.toString());
     }
 
     @Override
