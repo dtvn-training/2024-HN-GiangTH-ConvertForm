@@ -54,6 +54,26 @@ public class FileWriteService implements IFileWriteService {
     }
 
     @Override
+    public byte[] writeSharedLibFile(ConversionResult conversionResult) throws IOException {
+        if (conversionResult.getKeywordListOutputs().isEmpty() && conversionResult.getPlacementListOutputs().isEmpty()) return null;
+
+        Workbook workbook = new XSSFWorkbook();
+        FileOutputStream outFile = new FileOutputStream("C:\\Users\\GiangTH\\Downloads\\out_shared_lib.xlsx", false);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+        writeSheet(workbook, "Search Keyword List", conversionResult.getKeywordListOutputs());
+        writeSheet(workbook, "Placement List", conversionResult.getPlacementListOutputs());
+
+        workbook.write(outFile);
+        workbook.write(bos);
+        System.out.println("Write shared lib successfully");
+        outFile.close();
+        workbook.close();
+
+        return bos.toByteArray();
+    }
+
+    @Override
     public void writeErrorFile(List<ValidationErrorResponseDTO> validationErrorResponseDTOList) throws IOException {
         Workbook workbook = new XSSFWorkbook();
         FileOutputStream outFile = new FileOutputStream("C:\\Users\\GiangTH\\Downloads\\out_error.xlsx", false);

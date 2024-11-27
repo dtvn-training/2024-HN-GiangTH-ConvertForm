@@ -43,6 +43,8 @@ public class FileProcessService implements IFileProcessService {
             ConversionResult conversionResult = fileConvertService.convertData(sheets);
 
             byte[] output = fileWriteService.writeExcelFileDemo(conversionResult);
+            byte[] outputSharedLib = fileWriteService.writeSharedLibFile(conversionResult);
+
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
             headers.setContentDisposition(ContentDisposition
