@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +35,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<String> handleIO(ValidationException e) {
+        logger.trace(e.toString());
+        return ResponseEntity.status(500).body(e.getMessage());
+    }
+
+    @ExceptionHandler(ParseException.class)
+    public ResponseEntity<String> handleParse(ValidationException e) {
         logger.trace(e.toString());
         return ResponseEntity.status(500).body(e.getMessage());
     }
