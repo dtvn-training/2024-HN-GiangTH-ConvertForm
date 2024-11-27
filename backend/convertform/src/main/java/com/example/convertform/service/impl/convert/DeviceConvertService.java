@@ -40,13 +40,13 @@ public class DeviceConvertService {
         }
 
         return switch (device) {
-            case "ALL" -> "・PC,・Smartphone,・Tablet";
-            case "PC/TB" -> "・PC,・Tablet";
-            case "SP/TB" -> "・Smartphone,・Tablet";
-            case "PC/SP" -> "・PC,・Smartphone";
-            case "PC" -> "・PC";
-            case "TB" -> "・Tablet";
-            case "SP" -> "・Smartphone";
+            case "ALL" -> "PC, Smartphone, Tablet";
+            case "PC/TB" -> "PC, Tablet";
+            case "SP/TB" -> "Smartphone, Tablet";
+            case "PC/SP" -> "PC, Smartphone";
+            case "PC" -> "PC";
+            case "TB" -> "Tablet";
+            case "SP" -> "Smartphone";
             default -> "";
         };
     }
