@@ -19,7 +19,7 @@ public class AreaRecord extends BaseRecord {
     String cName;
 
     @XlsColumn(columnName = "Ad Group Name")
-    @NotNull(message = "Campaign Name is required")
+    @NotNull(message = "Ad Group Name is required")
     String adGpName;
 
     @XlsColumn(columnName = "Location")

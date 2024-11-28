@@ -7,6 +7,6 @@ import java.io.IOException;
 
 @Service
 public interface IFileReadService {
-    public String readInputFileDemo () throws IOException;
-    public Object[] readInputFile (FileInputStream fileInputStream) throws IOException;
+    public Object[] readInputFileDemo () throws IOException;
+    public Object[] readInputFile (FileInputStream fileInputStream);
 }

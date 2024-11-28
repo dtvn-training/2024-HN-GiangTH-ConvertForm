@@ -34,7 +34,8 @@ public class CampaignConvertService {
     }
 
     public static String getOutputName(CampaignRecord source, String accountDes) {
-        String r = source.getCName() != null ? source.getCName() : "";
+        if (source.getCName() == null) return "CP name not exist";
+        String r = source.getCName();
         if (accountDes.equals("Yes")) {
             return String.format("%s [%s]", r.replace("_", "").replace("-", "~"),
                     getFormatedDate(source.getStartDate(), source.getEndDate()));
