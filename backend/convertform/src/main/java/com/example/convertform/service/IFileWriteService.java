@@ -10,5 +10,5 @@ public interface IFileWriteService {
     public byte[] writeExcelFileDemo(ConversionResult conversionResult) throws IOException;
     public byte[] writeSharedLibFile(ConversionResult conversionResult) throws IOException;
     public byte[] writeExcelFile(ConversionResult conversionResult);
-    public void writeErrorFile(List<ValidationErrorResponseDTO> validationErrorResponseDTOList) throws IOException;
+    public byte[] writeErrorFile(List<ValidationErrorResponseDTO> validationErrorResponseDTOList) throws IOException;
 }
