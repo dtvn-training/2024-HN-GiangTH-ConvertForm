@@ -1,5 +1,6 @@
-package com.example.convertform.entity;
+package com.example.convertform.service.impl.storage;
 
+import com.example.convertform.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;

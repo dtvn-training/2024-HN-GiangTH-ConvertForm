@@ -1,4 +1,4 @@
-package com.example.convertform.entity;
+package com.example.convertform.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

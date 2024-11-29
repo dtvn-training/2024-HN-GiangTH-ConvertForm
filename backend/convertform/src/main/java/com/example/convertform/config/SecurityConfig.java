@@ -1,7 +1,7 @@
 package com.example.convertform.config;
 
 import com.example.convertform.jwt.JwtAuthenticationFilter;
-import com.example.convertform.service.impl.repository.UserService;
+import com.example.convertform.service.impl.storage.UserService;
 import com.example.convertform.sqlmapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

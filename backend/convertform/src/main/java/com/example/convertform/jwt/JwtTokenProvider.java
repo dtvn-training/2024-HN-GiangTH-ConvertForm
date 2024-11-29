@@ -1,6 +1,5 @@
 package com.example.convertform.jwt;
 
-import com.example.convertform.entity.CustomUserDetails;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

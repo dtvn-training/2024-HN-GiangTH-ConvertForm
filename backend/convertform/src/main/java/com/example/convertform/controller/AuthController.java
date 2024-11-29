@@ -1,9 +1,9 @@
 package com.example.convertform.controller;
 
-import com.example.convertform.entity.AuthRequest;
+import com.example.convertform.dto.request.AuthRequest;
 import com.example.convertform.entity.User;
 import com.example.convertform.jwt.JwtTokenProvider;
-import com.example.convertform.service.impl.repository.UserService;
+import com.example.convertform.service.impl.storage.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
