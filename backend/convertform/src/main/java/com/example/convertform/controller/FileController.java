@@ -4,6 +4,7 @@ import com.example.convertform.service.impl.FileProcessService;
 import com.example.convertform.service.impl.FileReadService;
 import com.example.convertform.service.impl.repository.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +31,13 @@ public class FileController {
         return fileStorageService.downloadFileById(fileId, fileName);
     }
 
-    @GetMapping("/get")
-    String get() {
-        return "Still work";
+    @GetMapping("/history")
+    ResponseEntity<?> getUserHistory() {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/login")
+    ResponseEntity<String> login() {
+        return new ResponseEntity<>("Can you see that ?", HttpStatus.OK);
     }
 }

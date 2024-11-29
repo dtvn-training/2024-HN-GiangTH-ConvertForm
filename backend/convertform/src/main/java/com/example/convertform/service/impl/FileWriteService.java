@@ -46,6 +46,7 @@ public class FileWriteService implements IFileWriteService {
 
         workbook.write(outFile);
         workbook.write(bos);
+
         System.out.println("Write output file (CP) successfully");
         outFile.close();
         workbook.close();

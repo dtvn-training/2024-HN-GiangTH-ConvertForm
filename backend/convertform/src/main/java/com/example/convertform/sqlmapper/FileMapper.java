@@ -11,7 +11,7 @@ import java.util.List;
 
 @Mapper
 public interface FileMapper {
-    @Insert("INSERT INTO Files (uid, fileName, data, type, orgFileId) VALUES (#{uid}, #{fileName}, #{data}, #{type}, #{time}, #{orgFileId})")
+    @Insert("INSERT INTO Files (uid, fileName, data, type, orgFileId) VALUES (#{uid}, #{fileName}, #{data}, #{type}, #{orgFileId})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertFile(ExcelFile file);
 

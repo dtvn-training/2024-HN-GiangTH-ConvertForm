@@ -9,9 +9,12 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface UserMapper {
     @Select("SELECT * FROM Users WHERE uid = #{id}")
-    User getUserById(Integer id);
+    User getUserById(Long id);
 
-    @Insert("INSERT INTO Users (userName, passwordHash) VALUES (#{userName}, #{passwordHashed})")
+    @Select("SELECT * FROM Users WHERE username = #{name}")
+    User getUserByName(String name);
+
+    @Insert("INSERT INTO Users (username, password, roles) VALUES (#{username}, #{password}, #{roles})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertUser(User user);
 

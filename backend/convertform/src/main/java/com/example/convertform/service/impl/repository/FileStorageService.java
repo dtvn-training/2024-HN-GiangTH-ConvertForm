@@ -1,5 +1,6 @@
 package com.example.convertform.service.impl.repository;
 
+import com.example.convertform.dto.response.FileHistoryDTO;
 import com.example.convertform.entity.ExcelFile;
 import com.example.convertform.sqlmapper.FileMapper;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +16,16 @@ public class FileStorageService {
     @Autowired
     private final FileMapper fileMapper;
 
-    public void saveFile() {
+    public void saveFile(ExcelFile file) {
+        fileMapper.insertFile(file);
+        System.out.println("Save file success!!!!");
+    }
 
+    public List<FileHistoryDTO> getUserHistory(Integer uid) {
+        List<FileHistoryDTO> res = fileMapper.getHistoryByUserId(uid);
+
+
+        return res;
     }
 
     public ResponseEntity<byte[]> downloadFileById(Integer id, String fileName) {
