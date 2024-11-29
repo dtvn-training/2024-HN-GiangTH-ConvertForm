@@ -2,10 +2,9 @@ package com.example.convertform.sqlmapper;
 
 import com.example.convertform.dto.response.FileHistoryDTO;
 import com.example.convertform.entity.ExcelFile;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import com.example.convertform.entity.FileWith2Params;
+import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.type.ByteArrayTypeHandler;
 
 import java.util.List;
 
@@ -18,6 +17,10 @@ public interface FileMapper {
     @Select("SELECT id, fileName, type, create_at, orgFileId FROM Files WHERE uid = #{uid} ORDER BY time DESC")
     List<FileHistoryDTO> getHistoryByUserId(Integer uid);
 
-    @Select("SELECT data FROM Files WHERE id = #{id}")
-    byte[] getFileDataById(Integer id);
+    @Select("SELECT fileName, data FROM Files WHERE id = #{id}")
+    @Results({
+            @Result(property = "fileName", column = "fileName", javaType = String.class),
+            @Result(property = "data", column = "data", typeHandler = ByteArrayTypeHandler.class)
+    })
+    FileWith2Params getFileDataById(Integer id);
 }

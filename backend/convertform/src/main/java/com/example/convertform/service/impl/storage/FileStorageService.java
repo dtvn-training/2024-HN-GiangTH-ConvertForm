@@ -28,8 +28,8 @@ public class FileStorageService {
         return res;
     }
 
-    public ResponseEntity<byte[]> downloadFileById(Integer id, String fileName) {
-        byte[] requestFileData = fileMapper.getFileDataById(id);
+    public ResponseEntity<?> downloadFileById(Integer id, String fileName) {
+        byte[] requestFileData = fileMapper.getFileDataById(id).getData();
 
         if (!fileName.contains(".xlsx")) fileName += ".xlsx";
 
@@ -37,10 +37,12 @@ public class FileStorageService {
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDisposition(ContentDisposition
                 .attachment()
-                .filename(fileName)
+                .filename("fsffd.xlsx")
                 .build()
         );
         headers.setContentLength(requestFileData.length);
+
+        System.out.println("Sent!!");
 
         return new ResponseEntity<>(requestFileData, headers, HttpStatus.OK);
     }

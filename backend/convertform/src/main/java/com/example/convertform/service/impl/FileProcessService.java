@@ -62,7 +62,7 @@ public class FileProcessService implements IFileProcessService {
                     .fileName("test.xlsx")
                     .orgFileId(123)
                     .type(FileType.converted)
-                    .uid(1L)
+                    .uid(1)
                     .orgFileId(null)
                     .build();
             fileStorageService.saveFile(outputFile);

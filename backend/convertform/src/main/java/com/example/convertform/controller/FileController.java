@@ -25,7 +25,7 @@ public class FileController {
     }
 
     @GetMapping("/download/{fileId}")
-    ResponseEntity<byte[]> downloadFileById(@RequestParam("fileName") String fileName, @PathVariable Integer fileId) {
+    ResponseEntity<?> downloadFileById(@RequestParam("fileName") String fileName, @PathVariable Integer fileId) {
         return fileStorageService.downloadFileById(fileId, fileName);
     }
 

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Builder
 public class ExcelFile {
     private Integer id;
-    private Long uid;
+    private Integer uid;
     private String fileName;
     private FileType type;
     private byte[] data;
