@@ -9,6 +9,7 @@ import java.util.Collection;
 @Data
 @Builder
 public class SignInResponseDTO {
+    Integer uid;
     String token;
     String userName;
     Collection<? extends GrantedAuthority> roles;

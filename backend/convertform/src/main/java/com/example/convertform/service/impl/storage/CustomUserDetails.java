@@ -18,11 +18,13 @@ import java.util.stream.Stream;
 public class CustomUserDetails implements UserDetails {
     private String username;
     private String password;
+    private Integer id;
     private List<GrantedAuthority> authorities;
 
     public CustomUserDetails(User userInfo) {
         this.username = userInfo.getUsername();
         this.password = userInfo.getPassword();
+        this.id = userInfo.getId();
         this.authorities = Stream.of(userInfo.getRoles().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());

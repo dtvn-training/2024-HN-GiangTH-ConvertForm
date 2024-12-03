@@ -60,6 +60,7 @@ public class AuthService implements IAuthService {
 
         SignInResponseDTO signInResponseDTO = SignInResponseDTO.builder()
                 .userName(customUserDetails.getUsername())
+                .uid(customUserDetails.getId())
                 .token(jwt)
                 .roles(customUserDetails.getAuthorities())
                 .build();
