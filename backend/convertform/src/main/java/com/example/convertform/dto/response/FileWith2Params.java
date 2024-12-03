@@ -1,4 +1,4 @@
-package com.example.convertform.entity;
+package com.example.convertform.dto.response;
 
 import lombok.Data;
 

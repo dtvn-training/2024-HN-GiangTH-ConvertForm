@@ -1,10 +1,13 @@
 package com.example.convertform.dto.response;
 
-import com.example.convertform.entity.FileType;
+import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class FileHistoryDTO {
-    private FileInfoDTO orgFile;
-    private FileInfoDTO resultFile;
+    private FileInfoDTO originalFile;
+    private List<FileInfoDTO> relatedFiles;
 }

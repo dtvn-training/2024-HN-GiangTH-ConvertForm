@@ -21,7 +21,7 @@ public class CustomUserDetails implements UserDetails {
     private List<GrantedAuthority> authorities;
 
     public CustomUserDetails(User userInfo) {
-        this.username = userInfo.getUsername(); // Assuming 'name' is used as 'username'
+        this.username = userInfo.getUsername();
         this.password = userInfo.getPassword();
         this.authorities = Stream.of(userInfo.getRoles().split(","))
                 .map(SimpleGrantedAuthority::new)

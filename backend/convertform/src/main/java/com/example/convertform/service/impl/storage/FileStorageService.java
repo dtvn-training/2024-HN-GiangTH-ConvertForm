@@ -1,14 +1,12 @@
 package com.example.convertform.service.impl.storage;
 
-import com.example.convertform.dto.response.FileHistoryDTO;
 import com.example.convertform.entity.ExcelFile;
+import com.example.convertform.entity.FileType;
 import com.example.convertform.sqlmapper.FileMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -17,15 +15,13 @@ public class FileStorageService {
     private final FileMapper fileMapper;
 
     public void saveFile(ExcelFile file) {
-        fileMapper.insertFile(file);
+        if (file.getType() == FileType.ORIGINAL) fileMapper.insertOrgFile(file);
+        else fileMapper.insertConvertFile(file);
         System.out.println("Save file success!!!!");
     }
 
-    public List<FileHistoryDTO> getUserHistory(Integer uid) {
-        List<FileHistoryDTO> res = fileMapper.getHistoryByUserId(uid);
-
-
-        return res;
+    public ResponseEntity<?> getUserHistory(Integer uid) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(fileMapper.getFileHistoryByUid(uid));
     }
 
     public ResponseEntity<?> downloadFileById(Integer id, String fileName) {
@@ -37,7 +33,7 @@ public class FileStorageService {
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDisposition(ContentDisposition
                 .attachment()
-                .filename("fsffd.xlsx")
+                .filename(fileName)
                 .build()
         );
         headers.setContentLength(requestFileData.length);

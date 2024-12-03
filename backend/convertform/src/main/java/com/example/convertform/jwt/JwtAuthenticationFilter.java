@@ -28,10 +28,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String requestPath = request.getRequestURI();
 
         // Skip token validation for permitAll() paths
-        if (requestPath.equals("/auth/welcome") || requestPath.equals("/auth/registry") || requestPath.equals("/auth/generateToken")) {
+        if (requestPath.equals("/auth/welcome") || requestPath.equals("/auth/registry") || requestPath.equals("/auth/sign-in")) {
             filterChain.doFilter(request, response);
             return;
         }
+
         // Retrieve the Authorization header
         String authHeader = request.getHeader("Authorization");
         String token = null;
