@@ -3,7 +3,7 @@ package com.example.convertform.service.impl;
 import com.example.convertform.dto.output.ConversionResult;
 import com.example.convertform.dto.response.ValidationErrorResponseDTO;
 import com.example.convertform.entity.ExcelFile;
-import com.example.convertform.entity.FileType;
+import com.example.convertform.entity.enums.FileType;
 import com.example.convertform.service.IFileProcessService;
 import com.example.convertform.service.impl.storage.FileStorageService;
 import lombok.RequiredArgsConstructor;

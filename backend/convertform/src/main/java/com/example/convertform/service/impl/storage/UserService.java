@@ -1,5 +1,6 @@
 package com.example.convertform.service.impl.storage;
 
+import com.example.convertform.entity.CustomUserDetails;
 import com.example.convertform.entity.User;
 import com.example.convertform.sqlmapper.UserMapper;
 import lombok.RequiredArgsConstructor;

@@ -5,7 +5,7 @@ import com.example.convertform.dto.response.SignInResponseDTO;
 import com.example.convertform.entity.User;
 import com.example.convertform.jwt.JwtTokenProvider;
 import com.example.convertform.service.IAuthService;
-import com.example.convertform.service.impl.storage.CustomUserDetails;
+import com.example.convertform.entity.CustomUserDetails;
 import com.example.convertform.service.impl.storage.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

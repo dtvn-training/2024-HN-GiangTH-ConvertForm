@@ -1,7 +1,7 @@
 package com.example.convertform.service.impl.storage;
 
 import com.example.convertform.entity.ExcelFile;
-import com.example.convertform.entity.FileType;
+import com.example.convertform.entity.enums.FileType;
 import com.example.convertform.sqlmapper.FileMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
