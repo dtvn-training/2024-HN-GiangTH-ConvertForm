@@ -4,9 +4,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 @Service
 public interface IFileReadService {
-    public Object[] readInputFileDemo () throws IOException;
-    public Object[] readInputFile (FileInputStream fileInputStream);
+    public Object[] readInputFile (InputStream fileInputStream) throws IOException;
 }

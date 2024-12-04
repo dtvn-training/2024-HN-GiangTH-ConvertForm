@@ -1,27 +1,22 @@
 <template>
     <div class="flex h-screen w-full">
-      <!-- Left Side: Image -->
       <div class="w-1/2 h-auto">
         <img
-          src="https://loremflickr.com/200/200?random=1"
+          src="https://wallpapers.com/images/hd/plant-phone-3kyxtd2uvib3kl2g.jpg"
           alt="Random Plant"
           class="h-full w-full object-cover"
         />
       </div>
   
-      <!-- Right Side: Login Form -->
       <div class="w-1/2 flex items-center justify-center bg-gray-50">
         <div class="w-96 bg-white p-8 shadow-lg rounded-lg">
-          <!-- Login Heading -->
           <h2 class="text-2xl font-semibold text-gray-800">Login to your account</h2>
   
-          <!-- Form -->
           <form @submit.prevent="handleLogin" class="mt-6">
-            <!-- Email Input -->
             <div class="mb-4">
               <label for="email" class="block text-sm font-medium text-gray-600">Email</label>
               <input
-                type="email"
+                type="text"
                 id="email"
                 v-model="email"
                 placeholder="example@gmail.com"
@@ -30,7 +25,6 @@
               />
             </div>
   
-            <!-- Password Input -->
             <div class="mb-4">
               <label for="password" class="block text-sm font-medium text-gray-600">Password</label>
               <div class="flex items-center">
@@ -46,7 +40,6 @@
               </div>
             </div>
   
-            <!-- Submit Button -->
             <button
               type="submit"
               class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg shadow hover:bg-blue-600 transition"
@@ -55,7 +48,6 @@
             </button>
           </form>
   
-          <!-- Sign Up Link -->
           <p class="text-center text-sm text-gray-500 mt-4">
             Don't Have An Account? 
             <a href="#" class="text-blue-500 hover:underline">Sign Up</a>
@@ -67,27 +59,48 @@
   
   <script>
   import { ref } from "vue";
+  import client from "@/api/apiSetup";
+  import router from "@/router";
+  import { useUserStore } from "@/store/userStorage";
+
+  const userStore = useUserStore()
   
   export default {
     setup() {
       const email = ref("");
       const password = ref("");
   
-      const handleLogin = () => {
-        console.log("Email:", email.value);
-        console.log("Password:", password.value);
-        // Perform login logic here
-      };
-  
       return {
         email,
-        password,
-        handleLogin,
+        password
       };
     },
+    methods: {
+      async handleLogin () {
+        try {
+          const response = await client.post('/sign-in', {
+            username: email.value,
+            password: password.value
+          })
+
+          console.log(response.status + response.data)
+
+          if (response.status == 202) {
+            console.log(response.data)
+            userStore.setUId(response.data.uid)
+            userStore.setToken(response.data.token)
+            userStore.setName(response.data.userName)
+            console.log(userStore.getUserName + userStore.getUId + userStore.getToken)
+            router.push({path: '/home'})
+          }
+        } catch (error) {
+          console.error("Signin failed:", error.response?.data || error.message);
+        }
+      }
+    }
   };
   </script>
   
   <style>
-  /* Add any custom styling here if necessary */
+
   </style>

@@ -20,7 +20,7 @@ public class FileController {
     FileStorageService fileStorageService;
 
     @PostMapping("/upload")
-    ResponseEntity<?> upload(@RequestParam("file") MultipartFile file) {
+    ResponseEntity<?> upload(@RequestParam("file") MultipartFile file) throws IOException {
         return fileProcessService.processExcelFile(file);
     }
 

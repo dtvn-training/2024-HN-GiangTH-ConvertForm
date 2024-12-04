@@ -34,4 +34,10 @@ public class UserService implements UserDetailsService {
 
         return user != null;
     }
+
+    public Integer getIdFromName(String name) {
+        User user = userMapper.getUserByName(name);
+
+        return user != null ? user.getId() : 1;
+    }
 }

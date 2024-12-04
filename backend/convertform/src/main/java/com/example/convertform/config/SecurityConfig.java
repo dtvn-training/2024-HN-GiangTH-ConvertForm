@@ -30,6 +30,9 @@ public class SecurityConfig {
     private JwtAuthenticationFilter authFilter;
 
     @Autowired
+    private AppCorsFilter appCorsFilter;
+
+    @Autowired
     private final UserMapper userMapper;
 
     @Bean
@@ -51,7 +54,8 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilter(appCorsFilter);
 
         return http.build();
     }

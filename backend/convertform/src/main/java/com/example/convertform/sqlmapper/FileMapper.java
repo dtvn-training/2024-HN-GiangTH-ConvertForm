@@ -15,7 +15,7 @@ public interface FileMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertConvertFile(ExcelFile file);
 
-    @Insert("INSERT INTO Files (uid, fileName, data, type) VALUES (#{uid}, #{fileName}, #{data}, #{type}")
+    @Insert("INSERT INTO Files (uid, fileName, data, type) VALUES (#{uid}, #{fileName}, #{data}, #{type})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertOrgFile(ExcelFile file);
 

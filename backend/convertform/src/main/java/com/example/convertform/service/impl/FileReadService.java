@@ -12,24 +12,20 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class FileReadService implements IFileReadService {
     private final XlsMapper xlsMapper;
+
     @Override
-    public Object[] readInputFileDemo() throws IOException {
-        FileInputStream fileInputStream = new FileInputStream("C:\\Users\\GiangTH\\Downloads\\input_true.xlsx");
+    public Object[] readInputFile(InputStream file) throws IOException {
 
         return xlsMapper.loadMultiple(
-                fileInputStream,
+                file,
                 new Class[]{CampaignSheet.class, AdGroupSheet.class, AreaSheet.class, TextSheet.class, PlacementSheet.class, SearchTargetSheet.class, SiteCategorySheet.class}
         );
-    }
-
-    @Override
-    public Object[] readInputFile(FileInputStream fileInputStream) {
-        return new Object[0];
     }
 }
