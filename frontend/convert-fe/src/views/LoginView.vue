@@ -91,7 +91,7 @@
             userStore.setToken(response.data.token)
             userStore.setName(response.data.userName)
             console.log(userStore.getUserName + userStore.getUId + userStore.getToken)
-            router.push({path: '/home'})
+            router.push({path: '/history'})
           }
         } catch (error) {
           console.error("Signin failed:", error.response?.data || error.message);

@@ -14,10 +14,11 @@ public class FileStorageService {
     @Autowired
     private final FileMapper fileMapper;
 
-    public void saveFile(ExcelFile file) {
+    public Integer saveFile(ExcelFile file) {
         if (file.getType() == FileType.ORIGINAL) fileMapper.insertOrgFile(file);
         else fileMapper.insertConvertFile(file);
         System.out.println("Save file success!!!!");
+        return file.getId();
     }
 
     public ResponseEntity<?> getUserHistory(Integer uid) {

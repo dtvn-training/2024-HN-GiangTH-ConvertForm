@@ -33,7 +33,7 @@
 
     <!-- Main Content -->
     <main class="main-content">
-      <div v-if="!loading" class="loading">Loading history...</div>
+      <div v-if="loading" class="loading">Loading history...</div>
       <div v-else-if="error" class="error">Error: {{ error }}</div>
       <div v-else class="file-grid">
         <FileItem
@@ -48,9 +48,9 @@
 </template>
 
 <script>
-import axios from "axios";
 import FileItem from "../component/FileItem.vue";
 import { useUserStore } from "@/store/userStorage";
+import clientFile from "@/api/apiFileSetup";
 
 export default {
   components: {
@@ -59,86 +59,23 @@ export default {
   data() {
     const userStore = useUserStore()
     return {
-      files: [
-        {
-          "originalFile": {
-              "fileId": 1,
-              "fileName": "org_file",
-              "type": "ORIGINAL",
-              "createAt": "2024-11-29T09:06:40"
-          },
-          "relatedFiles": [
-              {
-                  "fileId": 3,
-                  "fileName": "test.xlsx",
-                  "type": "CONVERTED",
-                  "createAt": "2024-11-29T09:19:23"
-              },
-              {
-                  "fileId": 4,
-                  "fileName": "test.xlsx",
-                  "type": "CONVERTED",
-                  "createAt": "2024-11-29T09:21:46"
-              },
-              {
-                  "fileId": 5,
-                  "fileName": "test.xlsx",
-                  "type": "CONVERTED",
-                  "createAt": "2024-11-29T14:44:04"
-              }
-          ]
-        },
-        {
-          "originalFile": {
-              "fileId": 1,
-              "fileName": "org_file",
-              "type": "ORIGINAL",
-              "createAt": "2024-11-29T09:06:40"
-          },
-          "relatedFiles": [
-              {
-                  "fileId": 3,
-                  "fileName": "test.xlsx",
-                  "type": "CONVERTED",
-                  "createAt": "2024-11-29T09:19:23"
-              },
-              {
-                  "fileId": 4,
-                  "fileName": "test.xlsx",
-                  "type": "CONVERTED",
-                  "createAt": "2024-11-29T09:21:46"
-              }
-          ]
-        },
-        {
-          "originalFile": {
-              "fileId": 1,
-              "fileName": "org_file",
-              "type": "ORIGINAL",
-              "createAt": "2024-11-29T09:06:40"
-          },
-          "relatedFiles": [
-              {
-                  "fileId": 3,
-                  "fileName": "test.xlsx",
-                  "type": "CONVERTED",
-                  "createAt": "2024-11-29T09:19:23"
-              }
-          ]
-        },
-      ],
+      files: null,
       loading: true, 
       error: null, 
-      userName: userStore.getUserName
+      userName: userStore.getUserName,
+      userId: userStore.getUId ? userStore.getUId : 1
     };
   },
   methods: {
     // Fetch history data from the backend
     async fetchHistory() {
       try {
-        const response = await axios.get("http://localhost:8080/api/history");
+        const response = await clientFile.get(`/history/${this.userId}`);
+        console.log(response.data)
         this.files = response.data; // Assign response data to `files`
         this.loading = false; // Stop loading
+        console.log(this.loading)
+        console.log(this.files)
       } catch (err) {
         this.error = err.message || "Failed to fetch history!";
         this.loading = false;
@@ -146,22 +83,17 @@ export default {
     },
 
     // Handle actions from FileItem
-    handleFileAction(action) {
-      console.log("Action Received:", action);
-      // Example: Action object contains { type, fileName, fileId }
-      // Implement further logic here based on the action
-      if (action.type === "original") {
-        alert(`Original file selected: ${action.fileName} (ID: ${action.fileId})`);
-      } else if (action.type === "output") {
-        alert(`Output file selected: ${action.fileName} (ID: ${action.fileId})`);
-      } else if (action.type === "error") {
-        alert(`Error file selected: ${action.fileName} (ID: ${action.fileId})`);
+    async handleFileAction(action) {
+      try {
+        const response = await clientFile.get(`/download/${action.fileId}?fileName=${action.fileName}`)
+        console.log(response)
+      } catch (err) {
+        this.error = err.message || "Failed to download!";
       }
     },
   },
   mounted() {
-    // Fetch data when the component is mounted
-    // this.fetchHistory();
+    this.fetchHistory();
   },
 };
 </script>

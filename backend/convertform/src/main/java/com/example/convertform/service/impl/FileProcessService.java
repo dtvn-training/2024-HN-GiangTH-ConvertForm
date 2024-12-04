@@ -42,6 +42,8 @@ public class FileProcessService implements IFileProcessService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         String name = authentication.getName();
+        Integer uid = userService.getIdFromName(name);
+        Integer orgFileId = 0;
         System.out.println(name + " " + inputFile.getOriginalFilename() + " " + inputFile.getBytes().length);
 
         try {
@@ -53,9 +55,9 @@ public class FileProcessService implements IFileProcessService {
                     .data(inputFile.getBytes())
                     .fileName(inputFile.getOriginalFilename())
                     .type(FileType.ORIGINAL)
-                    .uid(userService.getIdFromName(name))
+                    .uid(uid)
                     .build();
-            fileStorageService.saveFile(orgFile);
+            orgFileId = fileStorageService.saveFile(orgFile);
 
             List<ValidationErrorResponseDTO> validationErrorResponseDTOList = fileValidateService.validateSingleFieldData(sheets);
             fileValidateService.validateRelated(sheets, validationErrorResponseDTOList);
@@ -73,6 +75,16 @@ public class FileProcessService implements IFileProcessService {
                 );
                 headers.setContentLength(errorOutput.length);
 
+                ExcelFile errorFile = ExcelFile.builder()
+                        .data(errorOutput)
+                        .fileName("error_report.xlsx")
+                        .uid(uid)
+                        .type(FileType.ERROR)
+                        .orgFileId(orgFileId)
+                        .build();
+
+                fileStorageService.saveFile(errorFile);
+
                 return new ResponseEntity<>(errorOutput, headers, HttpStatus.EXPECTATION_FAILED);
             }
 
@@ -83,10 +95,9 @@ public class FileProcessService implements IFileProcessService {
             ExcelFile outputFile = ExcelFile.builder()
                     .data(output)
                     .fileName("test.xlsx")
-                    .orgFileId(123)
                     .type(FileType.CONVERTED)
                     .uid(1)
-                    .orgFileId(null)
+                    .orgFileId(orgFileId)
                     .build();
             fileStorageService.saveFile(outputFile);
             byte[] outputSharedLib = fileWriteService.writeSharedLibFile(conversionResult);
