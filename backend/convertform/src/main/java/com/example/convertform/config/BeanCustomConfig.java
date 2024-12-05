@@ -1,5 +1,6 @@
 package com.example.convertform.config;
 
+import com.example.convertform.sqlmapper.FileMapper;
 import com.gh.mygreen.xlsmapper.XlsMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

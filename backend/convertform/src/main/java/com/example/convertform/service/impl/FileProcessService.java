@@ -2,16 +2,16 @@ package com.example.convertform.service.impl;
 
 import com.example.convertform.dto.output.ConversionResult;
 import com.example.convertform.dto.response.ValidationErrorResponseDTO;
+import com.example.convertform.entity.ExcelFile;
+import com.example.convertform.entity.FileType;
 import com.example.convertform.service.IFileProcessService;
+import com.example.convertform.service.impl.storage.FileStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -26,6 +26,8 @@ public class FileProcessService implements IFileProcessService {
     private final FileConvertService fileConvertService;
     @Autowired
     private final FileWriteService fileWriteService;
+    @Autowired
+    private final FileStorageService fileStorageService;
 
     @Override
     public ResponseEntity<?> processExcelFile(MultipartFile inputFile) {
@@ -36,13 +38,34 @@ public class FileProcessService implements IFileProcessService {
             fileValidateService.validateRelated(sheets, validationErrorResponseDTOList);
 
 //            if (!validationErrorResponseDTOList.isEmpty()) {
-//                fileWriteService.writeErrorFile(validationErrorResponseDTOList);
-//                return ResponseEntity.status(500).body("Validation error, pls solve first");
+//                //error file in bytes
+//                byte[] errorOutput = fileWriteService.writeErrorFile(validationErrorResponseDTOList);
+//
+//                HttpHeaders headers = new HttpHeaders();
+//                headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+//                headers.setContentDisposition(ContentDisposition
+//                        .attachment()
+//                        .filename("error_output.xlsx")
+//                        .build()
+//                );
+//                headers.setContentLength(errorOutput.length);
+//
+//                return new ResponseEntity<>(errorOutput, headers, HttpStatus.EXPECTATION_FAILED);
 //            }
 
             ConversionResult conversionResult = fileConvertService.convertData(sheets);
 
+            //converted file in bytes
             byte[] output = fileWriteService.writeExcelFileDemo(conversionResult);
+            ExcelFile outputFile = ExcelFile.builder()
+                    .data(output)
+                    .fileName("test.xlsx")
+                    .orgFileId(123)
+                    .type(FileType.CONVERTED)
+                    .uid(1)
+                    .orgFileId(null)
+                    .build();
+            fileStorageService.saveFile(outputFile);
             byte[] outputSharedLib = fileWriteService.writeSharedLibFile(conversionResult);
 
             HttpHeaders headers = new HttpHeaders();

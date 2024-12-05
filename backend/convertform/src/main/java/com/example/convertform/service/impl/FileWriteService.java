@@ -46,6 +46,7 @@ public class FileWriteService implements IFileWriteService {
 
         workbook.write(outFile);
         workbook.write(bos);
+
         System.out.println("Write output file (CP) successfully");
         outFile.close();
         workbook.close();
@@ -74,9 +75,10 @@ public class FileWriteService implements IFileWriteService {
     }
 
     @Override
-    public void writeErrorFile(List<ValidationErrorResponseDTO> validationErrorResponseDTOList) throws IOException {
+    public byte[] writeErrorFile(List<ValidationErrorResponseDTO> validationErrorResponseDTOList) throws IOException {
         Workbook workbook = new XSSFWorkbook();
         FileOutputStream outFile = new FileOutputStream("C:\\Users\\GiangTH\\Downloads\\out_error.xlsx", false);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         CellStyle headerStyle = workbook.createCellStyle();
         Font headerFont = workbook.createFont();
@@ -119,8 +121,11 @@ public class FileWriteService implements IFileWriteService {
             }
         }
         workbook.write(outFile);
+        workbook.write(bos);
         System.out.println("Error File write successfully");
         workbook.close();
+
+        return bos.toByteArray();
     }
 
     private <T> void writeSheet(Workbook workbook, String sheetName, List<T> list) {
