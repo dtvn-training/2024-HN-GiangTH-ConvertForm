@@ -87,9 +87,7 @@
 
           if (response.status == 202) {
             console.log(response.data)
-            userStore.setUId(response.data.uid)
-            userStore.setToken(response.data.token)
-            userStore.setName(response.data.userName)
+            userStore.saveToLocal(response.data.uid, response.data.userName, response.data.token)
             console.log(userStore.getUserName + userStore.getUId + userStore.getToken)
             router.push({path: '/history'})
           }

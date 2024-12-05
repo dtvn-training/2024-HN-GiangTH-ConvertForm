@@ -58,6 +58,7 @@ export default {
   },
   data() {
     const userStore = useUserStore()
+    userStore.loadFromStorage()
     return {
       files: null,
       loading: true, 
@@ -85,12 +86,44 @@ export default {
     // Handle actions from FileItem
     async handleFileAction(action) {
       try {
-        const response = await clientFile.get(`/download/${action.fileId}?fileName=${action.fileName}`)
-        console.log(response)
+        const response = await clientFile.get(
+          `/download/${action.fileId}?fileName=${action.fileName}`,
+          {
+            responseType: 'blob',
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+        )
+        
+        const blob = new Blob([response.data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+
+        const contentDisposition = response.headers["content-disposition"];
+        let filename = action.fileName;
+
+        if (contentDisposition) {
+          const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+          if (filenameMatch?.length === 2) filename = filenameMatch[1];
+        }
+
+        this.downloadFile(blob, filename)
+
       } catch (err) {
         this.error = err.message || "Failed to download!";
       }
     },
+    downloadFile: (blob, filename) => {
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      window.URL.revokeObjectURL(url);
+      link.remove();
+    }
   },
   mounted() {
     this.fetchHistory();

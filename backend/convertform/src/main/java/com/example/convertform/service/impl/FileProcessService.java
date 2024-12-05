@@ -18,8 +18,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +48,9 @@ public class FileProcessService implements IFileProcessService {
         String name = authentication.getName();
         Integer uid = userService.getIdFromName(name);
         Integer orgFileId = 0;
+        Map<String, Object> response = new HashMap<>();
+        String orgName = inputFile.getOriginalFilename() != null ? inputFile.getOriginalFilename() : "org";
+
         System.out.println(name + " " + inputFile.getOriginalFilename() + " " + inputFile.getBytes().length);
 
         try {
@@ -53,7 +60,7 @@ public class FileProcessService implements IFileProcessService {
 
             ExcelFile orgFile = ExcelFile.builder()
                     .data(inputFile.getBytes())
-                    .fileName(inputFile.getOriginalFilename())
+                    .fileName(generateFileName(orgName))
                     .type(FileType.ORIGINAL)
                     .uid(uid)
                     .build();
@@ -66,18 +73,9 @@ public class FileProcessService implements IFileProcessService {
                 //error file in bytes
                 byte[] errorOutput = fileWriteService.writeErrorFile(validationErrorResponseDTOList);
 
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-                headers.setContentDisposition(ContentDisposition
-                        .attachment()
-                        .filename("error_output.xlsx")
-                        .build()
-                );
-                headers.setContentLength(errorOutput.length);
-
                 ExcelFile errorFile = ExcelFile.builder()
                         .data(errorOutput)
-                        .fileName("error_report.xlsx")
+                        .fileName("error_rep_" + generateFileName(orgName))
                         .uid(uid)
                         .type(FileType.ERROR)
                         .orgFileId(orgFileId)
@@ -85,38 +83,69 @@ public class FileProcessService implements IFileProcessService {
 
                 fileStorageService.saveFile(errorFile);
 
-                return new ResponseEntity<>(errorOutput, headers, HttpStatus.EXPECTATION_FAILED);
+                response.put("main_output", Map.of(
+                        "fileId", errorFile.getId(),
+                        "fileName", errorFile.getFileName()
+                ));
+
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
             }
 
             ConversionResult conversionResult = fileConvertService.convertData(sheets);
 
             //converted file in bytes
             byte[] output = fileWriteService.writeExcelFileDemo(conversionResult);
+            byte[] outputSharedLib = fileWriteService.writeSharedLibFile(conversionResult);
+
             ExcelFile outputFile = ExcelFile.builder()
                     .data(output)
-                    .fileName("test.xlsx")
+                    .fileName("converted_" + generateFileName(orgName))
                     .type(FileType.CONVERTED)
-                    .uid(1)
+                    .uid(uid)
                     .orgFileId(orgFileId)
                     .build();
             fileStorageService.saveFile(outputFile);
-            byte[] outputSharedLib = fileWriteService.writeSharedLibFile(conversionResult);
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-            headers.setContentDisposition(ContentDisposition
-                    .attachment()
-                    .filename("convert_main_output.xlsx")
-                    .build()
-            );
-            headers.setContentLength(output.length);
+            response.put("main_output", Map.of(
+                    "fileId", outputFile.getId(),
+                    "fileName", outputFile.getFileName()
+            ));
 
-            return new ResponseEntity<>(output, headers, HttpStatus.OK);
+            if (outputSharedLib != null) {
+                ExcelFile sharedLibFile = ExcelFile.builder()
+                        .data(outputSharedLib)
+                        .fileName("shared_lib_" + generateFileName(orgName))
+                        .type(FileType.CONVERTED)
+                        .uid(uid)
+                        .orgFileId(orgFileId)
+                        .build();
+                fileStorageService.saveFile(sharedLibFile);
+
+                response.put("shared_lib_output", Map.of(
+                        "fileId", sharedLibFile.getId(),
+                        "fileName", sharedLibFile.getFileName()
+                ));
+            }
+
+            return ResponseEntity.status(HttpStatus.OK).body(response);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (NullPointerException ex) {
             throw new NullPointerException("Check blank cell again");
         }
+    }
+
+    private String generateFileName(String orgFileName) {
+        LocalDateTime now = LocalDateTime.now();
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MMdd_HHmmss");
+        String timestamp = now.format(dateTimeFormatter);
+
+        int dotIndex = orgFileName.lastIndexOf(".");
+        String baseName = (dotIndex == -1) ? orgFileName : orgFileName.substring(0, dotIndex);
+        String extension = (dotIndex == -1) ? "" : orgFileName.substring(dotIndex);
+
+        return baseName + "_" + timestamp + extension;
     }
 }

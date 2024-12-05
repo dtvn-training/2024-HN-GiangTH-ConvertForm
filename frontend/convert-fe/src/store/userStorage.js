@@ -18,7 +18,7 @@ export const useUserStore = defineStore('user', {
         },
 
         isLoggedIn(state) {
-            return state.token != null
+            return !!state.token
         },
 
         getUserName(state) {
@@ -34,6 +34,32 @@ export const useUserStore = defineStore('user', {
         },
         setName(userName) {
             this.userName = userName;
+        },
+        saveToLocal(uid, userName, jwt) {
+            this.uid = uid;
+            this.userName = userName;
+            this.token = jwt;
+            const userData = {
+                uid: uid,
+                token: jwt,
+                userName: userName
+            }
+            localStorage.setItem("userStore", JSON.stringify(userData))
+        },
+        loadFromStorage() {
+            const userData = localStorage.getItem("userStore");
+            if (userData) {
+                const { uid, token, userName } = JSON.parse(userData);
+                this.uid = uid;
+                this.token = token;
+                this.userName = userName;
+            }
+        },
+        clearStorage() {
+            localStorage.removeItem("userStore");
+            this.uid = null;
+            this.token = null;
+            this.userName = null;
         }
     }
 })

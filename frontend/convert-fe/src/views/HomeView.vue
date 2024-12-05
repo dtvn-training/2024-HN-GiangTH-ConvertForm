@@ -82,7 +82,15 @@
         <div
           class="response-area mt-4 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-white"
         >
-          <span class="text-gray-600">Result file:</span>
+          <span class="text-gray-600">{{ responseStatus }}</span>
+          <div v-for="(file, index) in resultFiles" :key="index" class="mt-4">
+            <button 
+              class="upload-button"
+              @click="handleFileAction(file.fileId, file.fileName)"
+            >
+              Download {{ file.fileName }}
+            </button>
+          </div>
         </div>
       </div>
     </main>
@@ -92,7 +100,6 @@
 <script>
 import { useUserStore } from '@/store/userStorage';
 import { ref } from 'vue';
-import axios from 'axios';
 import clientFile from '@/api/apiFileSetup';
 
 export default {
@@ -102,8 +109,12 @@ export default {
     const selectedFile = ref(null);
     const loading = ref(false);
     const error = ref(null);
+    const responseStatus = ref("")
+    const resultFiles = ref([]);
 
-    const userStore = useUserStore()
+    const userStore = useUserStore();
+    userStore.loadFromStorage();
+
     userName.value = userStore.getUserName
 
     const handleFileSelect = (event) => {
@@ -127,25 +138,35 @@ export default {
         const response = await clientFile.post('/upload', 
           formData,
           {
-            responseType: 'blob',
             headers: {
               'Content-Type': 'multipart/form-data'
             }
           }
         );
 
-        const blob = new Blob([response.data], {
-          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        });
+        console.log(response)
+        resultFiles.value = [];
 
-        const contentDisposition = response.headers["content-disposition"];
-        let filename = "convert_main_output.xlsx";
-        if (contentDisposition) {
-          const filenameMatch = contentDisposition.match(/filename="(.+)"/);
-          if (filenameMatch?.length === 2) filename = filenameMatch[1];
+        if (response.status === 202) responseStatus.value = "Your input file have validation error, please modify and upload again!"
+
+        else responseStatus.value = "Result File:"
+
+        // Extract the main file metadata
+        if (response.data.main_output) {
+          resultFiles.value.push({
+            fileName: response.data.main_output.fileName,
+            fileId: response.data.main_output.fileId,
+          });
         }
 
-        downloadFile(blob, filename);
+        // Extract the sharedLibFile metadata if it exists
+        if (response.data.shared_lib_output) {
+          resultFiles.value.push({
+            fileName: response.data.shared_lib_output.fileName,
+            fileId: response.data.shared_lib_output.fileId,
+          });
+        }
+      
       } catch (err) {
         error.value = "Upload failed: " + err.message;
       } finally {
@@ -155,9 +176,40 @@ export default {
       }
     };
 
-    const downloadFile = (blob, filename) => {
+    const handleFileAction = async (id, name) => {
+      try {
+        const response = await clientFile.get(
+          `/download/${id}?fileName=${name}`,
+          {
+            responseType: 'blob',
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+        )
+        
+        const blob = new Blob([response.data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+
+        const contentDisposition = response.headers["content-disposition"];
+        let filename = name;
+
+        if (contentDisposition) {
+          const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+          if (filenameMatch?.length === 2) filename = filenameMatch[1];
+        }
+
+        downloadFile(blob, filename)
+
+      } catch (err) {
+        this.error = err.message || "Failed to download!";
+      }
+    }
+
+    const downloadFile = async (blob, filename) => {
       const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
+      const link = document.createElement('a');
       link.href = url;
       link.download = filename;
       document.body.appendChild(link);
@@ -173,8 +225,11 @@ export default {
       loading,
       error,
       handleFileSelect,
+      handleFileAction,
       uploadFile,
       downloadFile,
+      responseStatus,
+      resultFiles
     };
   },
 };
