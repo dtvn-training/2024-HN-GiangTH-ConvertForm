@@ -33,4 +33,9 @@ public class FileController {
     ResponseEntity<?> getUserHistory(@PathVariable Integer uid) {
         return fileStorageService.getUserHistory(uid == null ? 1 : uid);
     }
+
+    @DeleteMapping("/delete/{fileId}")
+    ResponseEntity<?> deleteFileHistory(@PathVariable Integer fileId) {
+        return fileStorageService.deleteFile(fileId);
+    }
 }

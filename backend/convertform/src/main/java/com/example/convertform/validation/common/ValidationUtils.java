@@ -52,7 +52,7 @@ public class ValidationUtils {
                     String fieldName = propertyPath.substring(endIndex + 2);
                     errorRecordDTOList.add(new ErrorFromRecordDTO(errorNo, fieldName, message));
                 } else {
-                    errorRecordDTOList.add(new ErrorFromRecordDTO(errorNo, message));
+                    errorRecordDTOList.add(new ErrorFromRecordDTO(errorNo, "Start Date, End Date", message));
                 }
             } else {
                 if (errorObject instanceof PlacementTable placementTable) {

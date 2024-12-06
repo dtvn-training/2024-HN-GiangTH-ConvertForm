@@ -10,6 +10,10 @@ const router = createRouter({
       component: () => import('../views/HomeView.vue')
     },
     {
+      path: '/',
+      redirect: '/home'
+    },
+    {
       path: '/login',
       name: 'login',
       component: () => import('../views/LoginView.vue')
@@ -27,16 +31,16 @@ const router = createRouter({
   ]
 })
 
-// router.beforeEach((to) => {
-//   const userStore = useUserStore();
+router.beforeEach((to) => {
+  const userStore = useUserStore();
 
-//   if (!userStore.isLoggedIn && to.path !== '/login') {
-//     return '/login';
-//   }
+  if (!userStore.isLoggedIn && to.path !== '/login') {
+    return '/login';
+  }
 
-//   if (userStore.isLoggedIn && to.path === '/login') {
-//     return '/home';
-//   }
-// });
+  if (userStore.isLoggedIn && to.path === '/login') {
+    return '/home';
+  }
+});
 
 export default router

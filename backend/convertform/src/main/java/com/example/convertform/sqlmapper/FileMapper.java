@@ -55,4 +55,7 @@ public interface FileMapper {
             @Result(property = "data", column = "data", typeHandler = ByteArrayTypeHandler.class)
     })
     FileWithDataDTO getFileDataById(Integer id);
+
+    @Delete("DELETE FROM Files WHERE id = #{id}")
+    void deleteFile(Integer id);
 }

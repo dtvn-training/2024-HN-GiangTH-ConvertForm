@@ -43,4 +43,9 @@ public class FileStorageService {
 
         return new ResponseEntity<>(requestFileData, headers, HttpStatus.OK);
     }
+
+    public ResponseEntity<?> deleteFile(Integer fid) {
+        fileMapper.deleteFile(fid);
+        return ResponseEntity.status(HttpStatus.OK).body("Deleted");
+    }
 }

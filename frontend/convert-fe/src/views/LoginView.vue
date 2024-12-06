@@ -89,7 +89,7 @@
             console.log(response.data)
             userStore.saveToLocal(response.data.uid, response.data.userName, response.data.token)
             console.log(userStore.getUserName + userStore.getUId + userStore.getToken)
-            router.push({path: '/history'})
+            router.push({path: '/home'})
           }
         } catch (error) {
           console.error("Signin failed:", error.response?.data || error.message);
