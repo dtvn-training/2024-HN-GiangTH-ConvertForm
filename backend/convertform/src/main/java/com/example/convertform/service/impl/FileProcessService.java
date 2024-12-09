@@ -20,10 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -69,7 +66,8 @@ public class FileProcessService implements IFileProcessService {
             List<ValidationErrorResponseDTO> validationErrorResponseDTOList = fileValidateService.validateSingleFieldData(sheets);
             fileValidateService.validateRelated(sheets, validationErrorResponseDTOList);
 
-            if (!validationErrorResponseDTOList.isEmpty()) {
+            System.out.println(validationErrorResponseDTOList);
+            if (!areAllListsEmpty(validationErrorResponseDTOList)) {
                 //error file in bytes
                 byte[] errorOutput = fileWriteService.writeErrorFile(validationErrorResponseDTOList);
 
@@ -147,5 +145,12 @@ public class FileProcessService implements IFileProcessService {
         String extension = (dotIndex == -1) ? "" : orgFileName.substring(dotIndex);
 
         return baseName + "_" + timestamp + extension;
+    }
+
+    public boolean areAllListsEmpty(List<ValidationErrorResponseDTO> dtoList) {
+        return dtoList.stream().allMatch(dto ->
+                Optional.ofNullable(dto.getErrorRecordDTOList()).map(List::isEmpty).orElse(true) &&
+                        Optional.ofNullable(dto.getErrorSheetDTOList()).map(List::isEmpty).orElse(true)
+        );
     }
 }

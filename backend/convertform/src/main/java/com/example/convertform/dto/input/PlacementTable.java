@@ -24,6 +24,6 @@ public class PlacementTable {
     @XlsLabelledCell(label = "List Name", type = LabelledCellType.Right)
     String listName;
     @XlsLabelledCell(label = "Include/Exclude", type = LabelledCellType.Right)
-    @SelectionRequired(values = {"Exclude", "Include"})
+    @SelectionRequired(values = {"Exclude", "Include"}, message = "Include: Value must be in allowed list")
     String include;
 }

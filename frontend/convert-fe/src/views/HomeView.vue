@@ -31,7 +31,7 @@
           <div class="flex items-center justify-between">
             <div class="flex items-center">
               <span class="w-10 h-10 rounded-full bg-purple-100 flex justify-center items-center text-purple-600 font-semibold">
-                🧑
+                😎
               </span>
               <span class="ml-3 font-medium text-gray-700">{{ userName }}</span>
             </div>
@@ -192,7 +192,7 @@ export default {
         resultFiles.value = [];
 
         if (response.status === 202) responseStatus.value = "Your input file have validation error, please modify and upload again!"
-
+        
         else responseStatus.value = "Result File:"
 
         // Extract the main file metadata
@@ -212,7 +212,10 @@ export default {
         }
       
       } catch (err) {
-        error.value = "Upload failed: " + err.message;
+        if (err.response) {
+          error.value = "Upload failed: " + err.response.data
+        }
+        else error.value = "Upload failed: " + err.message;
       } finally {
         loading.value = false;
         if (fileInput.value) fileInput.value.value = "";

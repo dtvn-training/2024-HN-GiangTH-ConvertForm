@@ -31,7 +31,7 @@
           <div class="flex items-center justify-between">
             <div class="flex items-center">
               <span class="w-10 h-10 rounded-full bg-purple-100 flex justify-center items-center text-purple-600 font-semibold">
-                🧑
+                😎
               </span>
               <span class="ml-3 font-medium text-gray-700">{{ userName }}</span>
             </div>

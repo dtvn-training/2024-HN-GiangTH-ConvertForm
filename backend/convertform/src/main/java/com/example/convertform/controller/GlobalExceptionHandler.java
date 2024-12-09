@@ -1,5 +1,6 @@
 package com.example.convertform.controller;
 
+import com.gh.mygreen.xlsmapper.SheetNotFoundException;
 import com.gh.mygreen.xlsmapper.cellconverter.TypeBindException;
 import jakarta.validation.ValidationException;
 import org.slf4j.Logger;
@@ -61,5 +62,11 @@ public class GlobalExceptionHandler {
         });
 
         return errors;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(SheetNotFoundException.class)
+    public String handleInputFormatException(SheetNotFoundException ex) {
+        return "Sheet not found. Please choose right format of input file!";
     }
 }
