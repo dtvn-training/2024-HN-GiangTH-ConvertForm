@@ -1,6 +1,7 @@
 package com.example.convertform.controller;
 
 import com.example.convertform.dto.request.AuthRequest;
+import com.example.convertform.dto.request.TokenRefreshRequest;
 import com.example.convertform.service.impl.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +28,10 @@ public class AuthController {
     @PostMapping("/sign-in")
     public ResponseEntity<?> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
         return authService.signIn(authRequest);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(@RequestBody TokenRefreshRequest tokenRefreshRequest) {
+        return authService.refreshToken(tokenRefreshRequest);
     }
 }
