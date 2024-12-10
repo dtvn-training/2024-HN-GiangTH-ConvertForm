@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
@@ -27,6 +29,12 @@ public class UserService implements UserDetailsService {
 
     public void addUser(User userInfo) {
         userMapper.insertUser(userInfo);
+    }
+
+    public User getUserFromId(Integer id) {
+        Optional<User> user = userMapper.getUserById(id);
+
+        return user.orElse(null);
     }
 
     public boolean isUserExist(String userName) {

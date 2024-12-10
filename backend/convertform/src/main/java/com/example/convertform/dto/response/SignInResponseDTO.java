@@ -11,6 +11,7 @@ import java.util.Collection;
 public class SignInResponseDTO {
     Integer uid;
     String token;
+    String refreshToken;
     String userName;
     Collection<? extends GrantedAuthority> roles;
 }
