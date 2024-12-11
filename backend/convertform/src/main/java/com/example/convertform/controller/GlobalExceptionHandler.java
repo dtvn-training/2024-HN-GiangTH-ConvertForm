@@ -2,6 +2,7 @@ package com.example.convertform.controller;
 
 import com.gh.mygreen.xlsmapper.SheetNotFoundException;
 import com.gh.mygreen.xlsmapper.cellconverter.TypeBindException;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,5 +69,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SheetNotFoundException.class)
     public String handleInputFormatException(SheetNotFoundException ex) {
         return "Sheet not found. Please choose right format of input file!";
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<String> handleExpiredJwt(ExpiredJwtException ex) {
+        return ResponseEntity.status(401).body(ex.getMessage());
     }
 }

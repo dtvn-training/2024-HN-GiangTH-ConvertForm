@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Mapper
 public interface UserMapper {
-    @Select("SELECT * FROM Users WHERE uid = #{id}")
+    @Select("SELECT * FROM Users WHERE id = #{id}")
     Optional<User> getUserById(Integer id);
 
     @Select("SELECT * FROM Users WHERE username = #{name}")
