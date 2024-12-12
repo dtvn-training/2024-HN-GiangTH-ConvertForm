@@ -3,7 +3,7 @@ package com.example.convertform.sqlmapper;
 import com.example.convertform.dto.response.FileHistoryDTO;
 import com.example.convertform.dto.response.FileInfoDTO;
 import com.example.convertform.entity.ExcelFile;
-import com.example.convertform.dto.response.FileWith2Params;
+import com.example.convertform.dto.response.FileWithDataDTO;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.ByteArrayTypeHandler;
 
@@ -15,7 +15,7 @@ public interface FileMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertConvertFile(ExcelFile file);
 
-    @Insert("INSERT INTO Files (uid, fileName, data, type) VALUES (#{uid}, #{fileName}, #{data}, #{type}")
+    @Insert("INSERT INTO Files (uid, fileName, data, type) VALUES (#{uid}, #{fileName}, #{data}, #{type})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertOrgFile(ExcelFile file);
 
@@ -54,5 +54,8 @@ public interface FileMapper {
             @Result(property = "fileName", column = "fileName", javaType = String.class),
             @Result(property = "data", column = "data", typeHandler = ByteArrayTypeHandler.class)
     })
-    FileWith2Params getFileDataById(Integer id);
+    FileWithDataDTO getFileDataById(Integer id);
+
+    @Delete("DELETE FROM Files WHERE id = #{id}")
+    void deleteFile(Integer id);
 }

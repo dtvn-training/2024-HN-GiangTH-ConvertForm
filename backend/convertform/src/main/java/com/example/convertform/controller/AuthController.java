@@ -1,6 +1,7 @@
 package com.example.convertform.controller;
 
 import com.example.convertform.dto.request.AuthRequest;
+import com.example.convertform.dto.request.TokenRefreshRequest;
 import com.example.convertform.service.impl.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = "http://localhost:5173", maxAge = 3600)
 public class AuthController {
     @Autowired
     private AuthService authService;
@@ -26,5 +28,10 @@ public class AuthController {
     @PostMapping("/sign-in")
     public ResponseEntity<?> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
         return authService.signIn(authRequest);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(@RequestBody TokenRefreshRequest tokenRefreshRequest) {
+        return authService.refreshToken(tokenRefreshRequest);
     }
 }

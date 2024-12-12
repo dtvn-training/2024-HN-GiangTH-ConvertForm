@@ -20,7 +20,7 @@ public class FileController {
     FileStorageService fileStorageService;
 
     @PostMapping("/upload")
-    ResponseEntity<?> upload(@RequestParam("file") MultipartFile file) {
+    ResponseEntity<?> upload(@RequestParam("file") MultipartFile file) throws IOException {
         return fileProcessService.processExcelFile(file);
     }
 
@@ -32,5 +32,10 @@ public class FileController {
     @GetMapping("/history/{uid}")
     ResponseEntity<?> getUserHistory(@PathVariable Integer uid) {
         return fileStorageService.getUserHistory(uid == null ? 1 : uid);
+    }
+
+    @DeleteMapping("/delete/{fileId}")
+    ResponseEntity<?> deleteFileHistory(@PathVariable Integer fileId) {
+        return fileStorageService.deleteFile(fileId);
     }
 }

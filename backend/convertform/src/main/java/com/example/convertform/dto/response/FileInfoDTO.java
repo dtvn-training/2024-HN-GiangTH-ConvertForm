@@ -1,6 +1,6 @@
 package com.example.convertform.dto.response;
 
-import com.example.convertform.entity.FileType;
+import com.example.convertform.entity.enums.FileType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

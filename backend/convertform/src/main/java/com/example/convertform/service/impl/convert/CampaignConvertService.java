@@ -23,7 +23,7 @@ public class CampaignConvertService {
         output.setStartDate(source.getStartDate());
         output.setEndDate(source.getEndDate());
         output.setComponentType("Campaign");
-        output.setDailyBudget(String.valueOf(calculateDailyBudget(source.getStartDate(), source.getEndDate(), source.getBudget())));
+        output.setDailyBudget(String.valueOf(calculateDailyBudget(source.getStartDate(), source.getEndDate(), source.getBudget())) + "$");
         return output;
     }
 

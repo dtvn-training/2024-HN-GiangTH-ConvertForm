@@ -1,4 +1,4 @@
-package com.example.convertform.entity;
+package com.example.convertform.entity.enums;
 
 public enum FileType {
     ORIGINAL,

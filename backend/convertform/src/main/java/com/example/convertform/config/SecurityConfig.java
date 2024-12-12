@@ -30,6 +30,9 @@ public class SecurityConfig {
     private JwtAuthenticationFilter authFilter;
 
     @Autowired
+    private AppCorsFilter appCorsFilter;
+
+    @Autowired
     private final UserMapper userMapper;
 
     @Bean
@@ -42,7 +45,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/welcome", "/auth/registry", "/auth/sign-in").permitAll()
+                        .requestMatchers("/auth/welcome", "/auth/registry", "/auth/sign-in", "/auth/refresh").permitAll()
                         .requestMatchers("/auth/user/**").hasAuthority("ROLE_USER")
                         .requestMatchers("/auth/admin/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated() // Protect all other endpoints
@@ -51,7 +54,8 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilter(appCorsFilter);
 
         return http.build();
     }

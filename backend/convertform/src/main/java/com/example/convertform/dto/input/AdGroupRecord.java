@@ -26,7 +26,7 @@ public class AdGroupRecord extends BaseRecord {
     String adGpName;
 
     @XlsColumn(columnName = "Targeting Name 1")
-    @SelectionRequired(values = {"Search Targeting", "Placement"})
+    @SelectionRequired(values = {"Search Targeting", "Placement", "Site Category"})
     String targetName1;
 
     @XlsColumn(columnName = "Number 1")
@@ -34,60 +34,75 @@ public class AdGroupRecord extends BaseRecord {
     String number1;
 
     @XlsColumn(columnName = "Targeting Name 2")
-    @SelectionRequired(values = {"Search Targeting", "Placement"})
+    @SelectionRequired(values = {"Search Targeting", "Placement", "Site Category"})
     String targetName2;
 
     @XlsColumn(columnName = "Number 2")
+    @SelectionRequired(values = {"①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"})
     String number2;
 
     @XlsColumn(columnName = "Targeting Name 3")
-    @SelectionRequired(values = {"Search Targeting", "Placement"})
+    @SelectionRequired(values = {"Search Targeting", "Placement", "Site Category"})
     String targetName3;
 
     @XlsColumn(columnName = "Number 3")
+    @SelectionRequired(values = {"①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"})
     String number3;
 
     @XlsColumn(columnName = "Targeting Name 4")
-    @SelectionRequired(values = {"Search Targeting", "Placement"})
+    @SelectionRequired(values = {"Search Targeting", "Placement", "Site Category"})
     String targetName4;
 
     @XlsColumn(columnName = "Number 4")
+    @SelectionRequired(values = {"①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"})
     String number4;
 
     @XlsColumn(columnName = "Targeting Name 5")
+    @SelectionRequired(values = {"Search Targeting", "Placement", "Site Category"})
     String targetName5;
 
     @XlsColumn(columnName = "Number 5")
+    @SelectionRequired(values = {"①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"})
     String number5;
 
     @XlsColumn(columnName = "Targeting Name 6")
+    @SelectionRequired(values = {"Search Targeting", "Placement", "Site Category"})
     String targetName6;
 
     @XlsColumn(columnName = "Number 6")
+    @SelectionRequired(values = {"①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"})
     String number6;
 
     @XlsColumn(columnName = "Targeting Name 7")
+    @SelectionRequired(values = {"Search Targeting", "Placement", "Site Category"})
     String targetName7;
 
     @XlsColumn(columnName = "Number 7")
+    @SelectionRequired(values = {"①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"})
     String number7;
 
     @XlsColumn(columnName = "Targeting Name 8")
+    @SelectionRequired(values = {"Search Targeting", "Placement", "Site Category"})
     String targetName8;
 
     @XlsColumn(columnName = "Number 8")
+    @SelectionRequired(values = {"①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"})
     String number8;
 
     @XlsColumn(columnName = "Targeting Name 9")
+    @SelectionRequired(values = {"Search Targeting", "Placement", "Site Category"})
     String targetName9;
 
     @XlsColumn(columnName = "Number 9")
+    @SelectionRequired(values = {"①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"})
     String number9;
 
     @XlsColumn(columnName = "Targeting Name 10")
+    @SelectionRequired(values = {"Search Targeting", "Placement", "Site Category"})
     String targetName10;
 
     @XlsColumn(columnName = "Number 10")
+    @SelectionRequired(values = {"①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"})
     String number10;
 
     @XlsColumn(columnName = "Device")

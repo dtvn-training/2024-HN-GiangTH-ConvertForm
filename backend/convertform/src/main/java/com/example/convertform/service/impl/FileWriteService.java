@@ -30,7 +30,6 @@ public class FileWriteService implements IFileWriteService {
     public byte[] writeExcelFileDemo(ConversionResult result) throws IOException {
 
         Workbook workbook = new XSSFWorkbook();
-        FileOutputStream outFile = new FileOutputStream("C:\\Users\\GiangTH\\Downloads\\out_main.xlsx", false);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         writeSheet(workbook, "CP", result.getCampaignOutputs());
@@ -44,11 +43,9 @@ public class FileWriteService implements IFileWriteService {
         writeSheet(workbook, "Site Category", result.getSiteCategoryOutputs());
         writeSheet(workbook, "Placement", result.getPlacementOutputs());
 
-        workbook.write(outFile);
         workbook.write(bos);
 
         System.out.println("Write output file (CP) successfully");
-        outFile.close();
         workbook.close();
 
         return bos.toByteArray();
@@ -59,16 +56,13 @@ public class FileWriteService implements IFileWriteService {
         if (conversionResult.getKeywordListOutputs().isEmpty() && conversionResult.getPlacementListOutputs().isEmpty()) return null;
 
         Workbook workbook = new XSSFWorkbook();
-        FileOutputStream outFile = new FileOutputStream("C:\\Users\\GiangTH\\Downloads\\out_shared_lib.xlsx", false);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         writeSheet(workbook, "Search Keyword List", conversionResult.getKeywordListOutputs());
         writeSheet(workbook, "Placement List", conversionResult.getPlacementListOutputs());
 
-        workbook.write(outFile);
         workbook.write(bos);
         System.out.println("Write shared lib successfully");
-        outFile.close();
         workbook.close();
 
         return bos.toByteArray();
@@ -77,7 +71,6 @@ public class FileWriteService implements IFileWriteService {
     @Override
     public byte[] writeErrorFile(List<ValidationErrorResponseDTO> validationErrorResponseDTOList) throws IOException {
         Workbook workbook = new XSSFWorkbook();
-        FileOutputStream outFile = new FileOutputStream("C:\\Users\\GiangTH\\Downloads\\out_error.xlsx", false);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         CellStyle headerStyle = workbook.createCellStyle();
@@ -120,7 +113,6 @@ public class FileWriteService implements IFileWriteService {
                 }
             }
         }
-        workbook.write(outFile);
         workbook.write(bos);
         System.out.println("Error File write successfully");
         workbook.close();
@@ -192,11 +184,17 @@ public class FileWriteService implements IFileWriteService {
     }
 
     private void setCellValue(Cell cell, Object value) {
+        CellStyle dateStyle = cell.getSheet().getWorkbook().createCellStyle();
+        CreationHelper creationHelper = cell.getSheet().getWorkbook().getCreationHelper();
+        dateStyle.setDataFormat(creationHelper.createDataFormat().getFormat("dd/mm/yyyy"));
         switch (value) {
             case null -> cell.setCellValue("");
-            case Number number -> cell.setCellValue(number.doubleValue());
+            case Number number -> cell.setCellValue(number.doubleValue() + "$");
             case Boolean b -> cell.setCellValue(b);
-            case Date date -> cell.setCellValue(date);
+            case Date date -> {
+                cell.setCellValue(date);
+                cell.setCellStyle(dateStyle);
+            }
             default -> cell.setCellValue(value.toString());
         }
     }

@@ -1,7 +1,7 @@
 package com.example.convertform.service.impl.storage;
 
 import com.example.convertform.entity.ExcelFile;
-import com.example.convertform.entity.FileType;
+import com.example.convertform.entity.enums.FileType;
 import com.example.convertform.sqlmapper.FileMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +14,11 @@ public class FileStorageService {
     @Autowired
     private final FileMapper fileMapper;
 
-    public void saveFile(ExcelFile file) {
+    public Integer saveFile(ExcelFile file) {
         if (file.getType() == FileType.ORIGINAL) fileMapper.insertOrgFile(file);
         else fileMapper.insertConvertFile(file);
         System.out.println("Save file success!!!!");
+        return file.getId();
     }
 
     public ResponseEntity<?> getUserHistory(Integer uid) {
@@ -41,5 +42,10 @@ public class FileStorageService {
         System.out.println("Sent!!");
 
         return new ResponseEntity<>(requestFileData, headers, HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> deleteFile(Integer fid) {
+        fileMapper.deleteFile(fid);
+        return ResponseEntity.status(HttpStatus.OK).body("Deleted");
     }
 }

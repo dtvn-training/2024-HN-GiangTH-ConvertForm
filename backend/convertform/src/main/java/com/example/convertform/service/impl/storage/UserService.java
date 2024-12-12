@@ -1,5 +1,6 @@
 package com.example.convertform.service.impl.storage;
 
+import com.example.convertform.entity.CustomUserDetails;
 import com.example.convertform.entity.User;
 import com.example.convertform.sqlmapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,9 +31,21 @@ public class UserService implements UserDetailsService {
         userMapper.insertUser(userInfo);
     }
 
+    public User getUserFromId(Integer id) {
+        Optional<User> user = userMapper.getUserById(id);
+
+        return user.orElse(null);
+    }
+
     public boolean isUserExist(String userName) {
         User user = userMapper.getUserByName(userName);
 
         return user != null;
+    }
+
+    public Integer getIdFromName(String name) {
+        User user = userMapper.getUserByName(name);
+
+        return user != null ? user.getId() : 1;
     }
 }

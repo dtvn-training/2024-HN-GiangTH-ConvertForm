@@ -36,6 +36,7 @@ public class SiteCategoryConvertService {
             if (pair.getTargetName() == null || pair.getNumber() == null) continue;
 
             categorySheet.getTargetCategory().forEach((key, value) -> {
+                System.out.println("Value of " + key + value);
                 if (!value.isEmpty()) {
                     if (key.equals(pair.getPairName())) {
                         for (String category : value) {
@@ -45,7 +46,6 @@ public class SiteCategoryConvertService {
                             output.setComponentType("Targeting");
                             output.setTargetingType("Site Category");
                             output.setCategory(category);
-
                             res.add(output);
                         }
                     }

@@ -42,8 +42,8 @@ public class SiteCategorySheet {
 
         for (SiteCategoryRecord siteCategoryRecord : siteCategoryRecords) {
             if (siteCategoryRecord.getTick() != null) targetSite.computeIfAbsent("Site Category①", k -> new ArrayList<>()).add(siteCategoryRecord.getCategory());
-            if (siteCategoryRecord.getTick() != null) targetSite.computeIfAbsent("Site Category②", k -> new ArrayList<>()).add(siteCategoryRecord.getCategory());
-            if (siteCategoryRecord.getTick() != null) targetSite.computeIfAbsent("Site Category③", k -> new ArrayList<>()).add(siteCategoryRecord.getCategory());
+            if (siteCategoryRecord.getTick2() != null) targetSite.computeIfAbsent("Site Category②", k -> new ArrayList<>()).add(siteCategoryRecord.getCategory());
+            if (siteCategoryRecord.getTick3() != null) targetSite.computeIfAbsent("Site Category③", k -> new ArrayList<>()).add(siteCategoryRecord.getCategory());
         }
 
         return targetSite;
