@@ -34,7 +34,7 @@ const router = createRouter({
 router.beforeEach((to) => {
   const userStore = useUserStore();
 
-  if (!userStore.isLoggedIn && to.path !== '/login') {
+  if (!userStore.isLoggedIn && to.path !== '/login' && to.path !== '/register') {
     return '/login';
   }
 

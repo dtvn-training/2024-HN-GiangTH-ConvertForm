@@ -52,14 +52,36 @@
         <p>{{ error }}</p>
       </div>
 
-      <div v-else class="file-grid">
-        <FileItem
-          v-for="(fileGroup, index) in files"
-          :key="index"
-          :file="fileGroup"
-          @file-action="handleFileAction"
-          @delete-file="handleDeleteFile"
-        />
+      <div v-else class="flex-col">
+        <div class="date-wrapper border">
+          <!-- Date Picker Section -->
+          <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
+            <div class="flex flex-col space-y-2">
+              <label class="text-md font-medium text-gray-700">
+                Pick date
+                <span class="text-red-500 ml-1">*</span>
+              </label>
+              
+              <div class="relative">
+                <VueDatePicker 
+                  v-model="date" 
+                  @update:model-value="handlePick" 
+                  @cleared="handleClear"
+                  class="w-full px-4 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="file-grid">
+          <FileItem
+            v-for="(fileGroup, index) in files"
+            :key="index"
+            :file="fileGroup"
+            @file-action="handleFileAction"
+            @delete-file="handleDeleteFile"
+          />
+        </div>
       </div>
     </main>
   </div>
@@ -78,11 +100,13 @@ export default {
     const userStore = useUserStore()
     userStore.loadFromStorage()
     return {
+      allFiles: null,
       files: null,
       loading: true,
       error: null,
       userName: userStore.getUserName,
-      userId: userStore.getUId ? userStore.getUId : 1
+      userId: userStore.getUId ? userStore.getUId : 1,
+      date: null
     };
   },
   methods: {
@@ -90,6 +114,7 @@ export default {
       try {
         const response = await clientFile.get(`/history/${this.userId}`);
         this.files = response.data;
+        this.allFiles = response.data;
         this.loading = false;
       } catch (err) {
         this.error = err.message || "Failed to fetch history!";
@@ -154,6 +179,20 @@ export default {
       window.URL.revokeObjectURL(url);
       link.remove();
     },
+
+    handlePick(modelData) {
+      const targetDate = new Date(modelData)
+      const targetDateString = targetDate.toISOString().split('T')[0];
+
+      this.files = this.allFiles.filter(item => {
+        const itemDate = item.originalFile.createAt.split('T')[0]
+        return itemDate === targetDateString
+      })
+    },
+
+    handleClear() {
+      this.files = this.allFiles
+    }
   },
   mounted() {
     this.fetchHistory();

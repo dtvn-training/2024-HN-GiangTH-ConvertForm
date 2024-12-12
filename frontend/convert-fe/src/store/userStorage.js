@@ -7,6 +7,7 @@ export const useUserStore = defineStore('user', {
         const initState = {
             uid: null,
             token: null,
+            refresh: null,
             userName: null
         }
 
@@ -15,6 +16,7 @@ export const useUserStore = defineStore('user', {
             return {
                 uid: parsed.uid,
                 token: parsed.token,
+                refresh: parsed.refresh,
                 userName: parsed.userName
             }
         }
@@ -49,13 +51,18 @@ export const useUserStore = defineStore('user', {
         setName(userName) {
             this.userName = userName;
         },
-        saveToLocal(uid, userName, jwt) {
+        setRefresh(refresh) {
+            this.refresh = refresh;
+        },
+        saveToLocal(uid, userName, jwt, refresh) {
             this.uid = uid;
             this.userName = userName;
             this.token = jwt;
+            this.refresh = refresh;
             const userData = {
                 uid: uid,
                 token: jwt,
+                refresh: refresh,
                 userName: userName
             }
             localStorage.setItem("userStore", JSON.stringify(userData))
@@ -63,16 +70,30 @@ export const useUserStore = defineStore('user', {
         loadFromStorage() {
             const userData = localStorage.getItem("userStore");
             if (userData) {
-                const { uid, token, userName } = JSON.parse(userData);
+                const { uid, token, userName, refresh } = JSON.parse(userData);
                 this.uid = uid;
                 this.token = token;
+                this.refresh = refresh;
                 this.userName = userName;
             }
         },
+        updateStorageToken(jwt, refresh) {
+            const userData = localStorage.getItem("userStore");
+            if (userData) {
+                userData = {
+                    token: jwt,
+                    refresh: refresh,
+                    ...userData
+                }
+                localStorage.setItem("userStore", JSON.stringify(userData))
+            }
+        },
+
         clearStorage() {
             localStorage.removeItem("userStore");
             this.uid = null;
             this.token = null;
+            this.refresh = null;
             this.userName = null;
         }
     }

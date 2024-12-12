@@ -50,7 +50,7 @@
   
           <p class="text-center text-sm text-gray-500 mt-4">
             Don't Have An Account? 
-            <a href="#" class="text-blue-500 hover:underline">Sign Up</a>
+            <a href="/register" class="text-blue-500 hover:underline">Sign Up</a>
           </p>
         </div>
       </div>
@@ -87,7 +87,7 @@
 
           if (response.status == 202) {
             console.log(response.data)
-            userStore.saveToLocal(response.data.uid, response.data.userName, response.data.token)
+            userStore.saveToLocal(response.data.uid, response.data.userName, response.data.token, response.data.refreshToken)
             console.log(userStore.getUserName + userStore.getUId + userStore.getToken)
             router.push({path: '/home'})
           }
