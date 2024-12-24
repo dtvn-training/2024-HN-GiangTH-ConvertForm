@@ -7,6 +7,7 @@ import com.example.convertform.dto.response.ErrorFromRecordDTO;
 import com.example.convertform.dto.response.ErrorFromTargetTableDTO;
 import com.example.convertform.dto.response.ValidationErrorResponseDTO;
 import com.example.convertform.service.IFileWriteService;
+import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
@@ -74,6 +75,7 @@ public class FileWriteService implements IFileWriteService {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         CellStyle headerStyle = workbook.createCellStyle();
+        CreationHelper creationHelper = workbook.getCreationHelper();
         Font headerFont = workbook.createFont();
         headerFont.setBold(true);
         headerStyle.setFont(headerFont);
@@ -85,7 +87,7 @@ public class FileWriteService implements IFileWriteService {
             int rowNum = 0;
 
             Row headerRow = sheet.createRow(rowNum++);
-            String[] headers = {"Error Table", "Record No.", "Column name", "Error Description"};
+            String[] headers = {"Error Table", "Record No.", "Column name", "Error Description", "Reference"};
 
             for (int i = 0; i < headers.length; i++) {
                 Cell cell = headerRow.createCell(i);
@@ -110,6 +112,15 @@ public class FileWriteService implements IFileWriteService {
                     row.createCell(1).setCellValue(recordError.getRecordNo());
                     row.createCell(2).setCellValue(recordError.getFieldName());
                     row.createCell(3).setCellValue(recordError.getMessage());
+                    if (recordError.getColIndex() != null) {
+                        Hyperlink link = creationHelper.createHyperlink(HyperlinkType.DOCUMENT);
+                        String ref = sheet.getSheetName();
+                        link.setAddress("'" + ref + "'!" + recordError.getColIndex() + recordError.getRecordNo());
+                        System.out.println(link);
+                        Cell cell = row.createCell(4);
+                        cell.setHyperlink(link);
+                        cell.setCellValue("Link");
+                    }
                 }
             }
         }

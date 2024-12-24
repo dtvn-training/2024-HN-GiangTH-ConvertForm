@@ -2,12 +2,14 @@ package com.example.convertform.validation.common;
 
 import com.example.convertform.dto.input.BaseRecord;
 import com.example.convertform.dto.input.PlacementTable;
+import com.example.convertform.dto.input.RecordColIndex;
 import com.example.convertform.dto.input.SearchTargetTable;
 import com.example.convertform.dto.response.ValidationErrorResponseDTO;
 import com.example.convertform.dto.response.ErrorFromRecordDTO;
 import com.example.convertform.dto.response.ErrorFromTargetTableDTO;
 import jakarta.validation.*;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -50,7 +52,16 @@ public class ValidationUtils {
 
                 if ((propertyPath.length() - 1) != endIndex) {
                     String fieldName = propertyPath.substring(endIndex + 2);
-                    errorRecordDTOList.add(new ErrorFromRecordDTO(errorNo, fieldName, message));
+
+                    try {
+                        Field field = errorObject.getClass().getDeclaredField(fieldName);
+                        field.setAccessible(true);
+                        String colIndex = field.getAnnotation(RecordColIndex.class).colName();
+                        errorRecordDTOList.add(new ErrorFromRecordDTO(errorNo, fieldName, message, colIndex));
+                    } catch (NoSuchFieldException ex) {
+                        errorRecordDTOList.add(new ErrorFromRecordDTO(errorNo, fieldName, message));
+                        throw new RuntimeException(errorObject.toString() + ex);
+                    }
                 } else {
                     errorRecordDTOList.add(new ErrorFromRecordDTO(errorNo, "Start Date, End Date", message));
                 }
